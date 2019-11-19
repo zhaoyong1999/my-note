@@ -85,6 +85,8 @@
             + git pull origin master (拉取代码，把远程仓库代码拉取到本地)
             + git push origin master (推送代码，把本地代码推送到远程)
     
-- 5、git clone 远程仓库git地址  本地仓库名
+- 5、git clone 远程仓库git地址  本地仓库名(文件名)
     + 其实在真正开发的时候我们用的都是git clone
-      2、小组成员基于 git clone 把仓库克隆到本地（一步就干三件事：git init、git remote add、git pull）
+     2、小组成员基于 git clone 把仓库克隆到本地（一步就干三件事：git init、git remote add、git pull）
+
+- 6、git reset --hard 历史版本号(前7位就可以)   回滚到历史版本
