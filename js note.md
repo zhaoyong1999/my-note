@@ -1721,3 +1721,173 @@ let a = 12
 3. 自执行函数里的this是window
 4. 给元素事件行为绑定方法，方法里的this指向被绑定的元素本身
 5. 回调函数里的this一般指向window(函数里包函数)
+
+## 单例模式
+>单例模式：把描述同一个事物特征的信息进行分组归类，放到同一个命名空间下(减少全局变量的污染)
+```
+    //    var name = 'erYa';
+    //    var age = 18;
+
+    //    var name = 'jinYu';
+    //    var age = 22;
+
+    //    let person1 = {
+    //        name: 'erYa',
+    //        age:18
+    //    };
+    //    let person2 = {
+    //        name: 'jinYu',
+    //        age: 22
+    //    }
+    // person1变量名就是命名空间
+```
+### 高级单例模式
+>把单例模式封装到一个自执行函数里
+```
+let person1 = (function(){
+        let fn = function(){};
+        let name= 'erYa';
+        return {
+            name:name,
+            age:18,
+            fn:fn
+        }
+    })()
+
+
+        let person2 = (function(){
+        let fn = function(){};
+        let name= 'jinYu';
+        let age = 18;
+        return {
+            name:name,
+   
+            fn:fn
+        }
+    })()
+
+    let person3 = function(){
+        let name= 'jinYu';
+        let age = 26
+        return {
+            name:name,
+            fn:fn
+        }
+    }
+    console.log(person2) // 这是一个函数，不是person3的个人信息,因为它不是自执行函数，没有执行
+```
+
+## 工厂模式
+> 如果用单例模式去写很多个person就会变的很麻烦，就有了工厂模式
+> 特点：批量生产
+> 把实现相同功能的代码封装到函数里，以后想运行这个方法，就直接执行这个函数就好了
+> 高内聚：提高代码的复用率
+> 低耦合：减少页面的重复的代码
+```
+function createPerson(name, age){
+            var name = name;
+            var age = age;
+            var sex = 'girl'
+            return {
+                name,
+                age,
+                sex
+            }
+       }
+       let person1 = createPerson('erYa', 18);
+       let person2 = createPerson('jinYu', 18);
+       console.log(person1, person2);
+```
+
+## 面向对象
+标记语言：HTML/CSS3
+编程语言：JavaScript、PHP、C.....
+面向过程：C
+面向对象：JS、PHP...
+
+## 构造函数(重)
+> 刚才那些都是js的内置类，但是我们也可以自己去自定义一些类
+> new 函数执行叫做构造函数运行模式，此时的Fn就是自定义的Fn类(构造函数)，函数执行之后的返回结果就是一个对象，叫做实例对象(f就是Fn的实例)
+> 类就是函数数据类型的
+> 实例是对象数据类型的
+> 构造函数中的this指向当前实例
+> 构造函数和普通函数的不同
+ 1. 运行上的不同
+    普通函数 ➡ 形成私有函数 ➡ 形参赋值 ➡ 变量提升 ➡ 代码执行 ➡ 作用域是否销毁
+
+    构造函数 ➡ 形成私有作用域 ➡ 形参变量 ➡ 变量提升 ➡ 默认生成一个对象 ➡ 把this指向这对象 ➡ 代码执行 ➡ 默认把这个对象return出去 ➡ 作用域是否销毁
+
+ 2. 执行上的不同
+    构造函数如果不传实参，可以不加小括号
+ 
+ 3. 构造函数如果手动return一个基本数据值，不能改变人家的返回值，此时return的东西已经不是此前类的实例了【所以不要轻易修改构造函数的返回值
+
+```
+
+        //   构造函数（构造自定义类）
+        function Fn(name, age) {
+            /* 
+            1、默认生成一个空对象 {}
+            2、让函数里的this指向这个对象
+            3、代码执行
+            4、默认return 这个对象
+            */
+            this.name = name; // 给this增加键值对
+            this.age = age // 给this增加键值对
+            this.say = function(){}
+            return {}
+            //只有this才算属性
+        }
+
+        // new: 他是js里的关键字
+        Fn() // 普通函数运行
+        let f = new Fn()  // {}
+        let f1 = new Fn('erYa', 18);
+        let f2 = new Fn('jinYu', 18);
+        let f3 = new Fn;
+        let f4 = Fn;
+        console.log(f)
+        console.log(f1)
+        console.log(f2)
+        console.log(f1.age === f2.age)
+        console.log(f1.say === f2.say)
+        console.log(f3)
+        console.log(f4)
+```
+
+## instabceof
+> instanceof:他是检测当前实例是否属于某个类实例instanceof类，如果实例是属于这个类，那就返回true，反之就是false
+> 【局限性】：instanceof不能够检测基本数据类型，只能检测引用数据类型的值
+
+```
+    let ary = [];
+    let obj = {name:1};
+    console.log(ary instanceof Array) //true
+    console.log(obj instanceof Object) //true
+    console.log(ary instanceof Object) //true
+    console.log(ary instanceof RegExp) //false
+    console.log(/^$/ instanceof RegExp) //true RegExp是正则的意思
+
+     /* 
+        1、字面量创建实例的方式
+        let num = 1;
+        let str= 'w';
+        2、构造函数创建实例的方式
+        let ss = new Number(1);
+        */
+       let ss = new Number(1); // 利用构造函数的方式创建一个Number的实例
+       console.log(ss)
+       console.log((1).toFixed(2)) // '1.00'  把数字转换为字符串，保留指定位小数
+       console.log(ss.toFixed(2)) // '1.00'
+       let w = new String(3)  // 创建一个字符串的实例
+       console.log(w)
+       console.log(w.substr) // f
+       console.log(w instanceof String) // true
+```
+
+## 原型模式(重)
+> 构造函数解决了实例的私有属性的问题
+ 1. 每一个函数(普通函数、构造函数)都天生自带一个prototype属性，属性值是一个对象，他里面储存的是实例的公有属性(原型)
+ 2. 每一个原型都天生自带一个constructor属性，其属性值指向当前类
+ 3. 每一个对象都天生自带一个__proto__属性，其属性值指向当前所属类的原型
+例子见2019.11.22老师课件
