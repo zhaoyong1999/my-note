@@ -35,7 +35,7 @@
     git config -l   (查看全局配置信息) 【有的同学报错不用管，直接输入用户名和邮箱】
 
     git config --global user.name 'xxx'
-    git config --blobal user.email 'xxx@xxx.xxx'
+    git config --global user.email 'xxx@xxx.xxx'
 
     -------------到目前为止同学们输入git config --global -l要出来用户名和邮箱-------
 

@@ -1813,14 +1813,14 @@ function createPerson(name, age){
 > 构造函数中的this指向当前实例
 > 构造函数和普通函数的不同
  1. 运行上的不同
-    普通函数 ➡ 形成私有函数 ➡ 形参赋值 ➡ 变量提升 ➡ 代码执行 ➡ 作用域是否销毁
+    普通函数 ➡ 形成私有作用域 ➡ 形参赋值 ➡ 变量提升 ➡ 代码执行 ➡ 作用域是否销毁
 
-    构造函数 ➡ 形成私有作用域 ➡ 形参变量 ➡ 变量提升 ➡ 默认生成一个对象 ➡ 把this指向这对象 ➡ 代码执行 ➡ 默认把这个对象return出去 ➡ 作用域是否销毁
+    构造函数 ➡ 形成私有作用域 ➡ 形参赋值 ➡ 变量提升 ➡ 默认生成一个对象 ➡ 把this指向这对象 ➡ 代码执行 ➡ 默认把这个对象return出去 ➡ 作用域是否销毁
 
  2. 执行上的不同
     构造函数如果不传实参，可以不加小括号
  
- 3. 构造函数如果手动return一个基本数据值，不能改变人家的返回值，此时return的东西已经不是此前类的实例了【所以不要轻易修改构造函数的返回值
+ 3. 构造函数如果手动return一个基本数据类型的值，不会改变返回值，如果手动return一个引用数据类型的值，就会改变返回值，此时return的东西已经不是此前类的实例了【所以不要轻易修改构造函数的返回值】
 
 ```
 
@@ -1855,7 +1855,7 @@ function createPerson(name, age){
         console.log(f4)
 ```
 
-## instabceof
+## instanceof
 > instanceof:他是检测当前实例是否属于某个类实例instanceof类，如果实例是属于这个类，那就返回true，反之就是false
 > 【局限性】：instanceof不能够检测基本数据类型，只能检测引用数据类型的值
 
@@ -1891,3 +1891,15 @@ function createPerson(name, age){
  2. 每一个原型都天生自带一个constructor属性，其属性值指向当前类
  3. 每一个对象都天生自带一个__proto__属性，其属性值指向当前所属类的原型
 例子见2019.11.22老师课件
+
+**函数的三种角色：普通函数、构造函数、普通对象**
+
+## hasOwnProperty
+> hasOwnProperty:检测一个属性是否是自己的私有属性
+> in:检测一个属性是否属于某个对象
+> 实例.hasOwnPeoperty(被检测的值)
+```
+let ary = [1, 2, 3];
+        console.log(ary.hasOwnProperty(0)) // true 0是ary实例的私有属性
+        console.log(ary.hasOwnProperty('push')) // fasle push是ary实例的公有属性
+```
