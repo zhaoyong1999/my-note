@@ -691,6 +691,7 @@ let pigFather = null;
  + 会把对象中属性名是数字的先输出，并且按照从小到大的顺序输出
  + 在for in里获取每一项属性名所对应的属性值，必须用obj[key]的形式 
  + 每一项属性名对应的属性值  
+ + for in可以遍历出公有属性和私有属性
 
 ```
 let obj = {
@@ -712,7 +713,7 @@ for(var key in obj) // 属性名为obj{
 - typeof 检测数据类型的属性
 - instanceof 检测当前实例是否属于某个类
 - constructor 基于构造函数检测数据类型
-- Object.prototype.toString.call()： 检测数据类型最好的方式
+- Object.prototype.toString.call()： 检测数据类型最好的方式 他的返回值是一个字符串，里边是 '[object 你当前实例的所属类]'
 
 ## typeof 检测数据类型的属性
 - 他的返回值是一个字符串
@@ -969,7 +970,7 @@ let fn = (...a) =>{
 ```
 
 - 2、unshift
-    + 方法的含义：向数组末开头加内容
+    + 方法的含义：向数组开头加内容
     + 方法的参数：0到多个值
     + 方法的返回值：新数组的length
     + 原有数组是否发生改变：发生改变
@@ -1122,7 +1123,7 @@ let ary = [12,23,45,45];
         console.log(ary.indexOf()) // 不传参按没有找到处理  显示-1
 
         //lastIndexOf:是找的检测的值最后一次出现的位置
-        //lastIndexOf为从右向左找
+        
         //(n,m):n是被检测的值，m是检测到的位置
         //(n):检测到末尾
         console.log(ary.lastIndexOf(23,2)) //1
@@ -1556,7 +1557,7 @@ removeAttribute('属性名'); 在元素结构中移除属性
      console.log(window.a) // undefined
      ```
 
-     2. var和function可以重复创建同一个变量名(let不可以)
+     1. var和function可以重复创建同一个变量名(let不可以)
      ```
      var a = 12;
      var a = 13;
@@ -1566,7 +1567,7 @@ removeAttribute('属性名'); 在元素结构中移除属性
      let a = 13;
      ```
 
-     3. var和function有变量提升(let没有)
+     1. var和function有变量提升(let没有)
      ```
      
      b = 12 // 等价于window.b = 12因为window.可以省略
@@ -1721,6 +1722,7 @@ let a = 12
 3. 自执行函数里的this是window
 4. 给元素事件行为绑定方法，方法里的this指向被绑定的元素本身
 5. 回调函数里的this一般指向window(函数里包函数)
+6. 不能给this直接赋值
 
 ## 单例模式
 > 单例模式：把描述同一个事物特征的信息进行分组归类，放到同一个命名空间下(减少全局变量的污染)
@@ -1966,3 +1968,92 @@ Array.prototype.mySlice = function(n,m){
 2、new(带参数列表):就是构造函数执行有括号(19)
 3、new(无参数列表):就是构造函数执行没有括号(18)
 优先级一样，从左到右运算
+
+## 原型继承
+让类B的原型指向类A的实例，那么以后类B的实例既可以调取类A实例的私有属性，也可以调取类A实例的的公有属性，那这种继承方式就是原型继承
+```
+function A(){
+    this.getX = function(){
+        console.log('恭喜发财')
+    }
+};
+A.protopyte.getY = function(){
+    console.log('妮儿，你长得可俊哩')
+};
+function B(){}
+B.prototype = new A;
+let f = new B;
+f.getX();
+f.getY();
+```
+
+## 中间类继承
+arguments虽然不是Array的实例，但是我们可以手动把arguments的__proto__指向Array的原型，那这样arguments就可以使用Array原型上的方法了，这就是中间类继承
+```
+function fn(){
+    arguments.__proto__=Array.prototypr;
+}
+console.log(arguments.push(23))
+console.log(arguments)
+```
+
+## call apply bind 改变this指向
+> 每一个函数都是Function的实例，所以每一个函数都可以调取Function原型上的方法
+> call、apply、bind他们三个都可以改变函数里的this指向
+>  "use strict"  // 使用严格模式
+
++ call方法
+  1. fn通过__proto__属性找到当前所属类的原型(Function的原型)上的call方法
+  2. 让call方法执行，并且给call传实参
+  3. 在call方法执行的同时，也让fn执行，并且把fn的this指向了第一个参数
+  4. 在严格模式下，如果call不传参或者传undefined，那fn的this就是undefined，如果传null，那fn的this都是null
+  5. 在非严格模式下，如果call不传参或者传undefined或者传null，那fn的this都是window
+  6. call的第一个参数是fn的this指向，从第二个开始，就都是fn的正常参数了
+
+
++ apply
+    > 他和call方法一样，只不过第二个参数必须是数组或者类数组
+    ```
+    function fn(n,m){
+            console.log(this, n, m)
+        }
+    fn.apply(1, [20,30])
+    ```
+
++ bind
+   > 这个方法也是改变this指向的，但他会提前改变实例函数的this指向，并不会让实例函数执行，他的返回值是改变this之后的新函数
+   ```
+    let box = document.getElementById('box');
+    let fn = function(){
+        console.log(this)
+    };
+    let obj = {}
+    box.onclick  = fn.bind(obj)
+
+    fn = fn.bind(obj)
+    fn()
+    // let ww = fn.bind(obj)
+    console.log(ww === fn) // false
+    ```
+
+**案例call重构**见js老师课件第二周第二天
+
+## 求数组的最大值
+```
+let ary = [2,3,4,1,2,4,2,1,9]
+//1.Math.max,ES6的展开收缩运算符
+console.log(Math.max(...ary))
+//2.sort
+console.log(ary.sort((a,b)=>b-a)[0])
+//3.apply
+console.log(Math.max.apply('',ary))
+//4.比较
+let max = ary[0];
+for (var i = 1; i < ary.length; i++) {
+    var item = ary[i];
+    if(item>max){
+        max = item
+    }
+}
+console.log(max)
+```
