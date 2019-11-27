@@ -1971,6 +1971,7 @@ Array.prototype.mySlice = function(n,m){
 
 ## 原型继承
 让类B的原型指向类A的实例，那么以后类B的实例既可以调取类A实例的私有属性，也可以调取类A实例的的公有属性，那这种继承方式就是原型继承
+> 这种方式不可以使用到内置类，因为内置类原型不能修改
 ```
 function A(){
     this.getX = function(){
@@ -1989,6 +1990,7 @@ f.getY();
 
 ## 中间类继承
 arguments虽然不是Array的实例，但是我们可以手动把arguments的__proto__指向Array的原型，那这样arguments就可以使用Array原型上的方法了，这就是中间类继承
+> 中间类继承只能继承公有属性
 ```
 function fn(){
     arguments.__proto__=Array.prototypr;
@@ -2009,6 +2011,9 @@ console.log(arguments)
   4. 在严格模式下，如果call不传参或者传undefined，那fn的this就是undefined，如果传null，那fn的this都是null
   5. 在非严格模式下，如果call不传参或者传undefined或者传null，那fn的this都是window
   6. call的第一个参数是fn的this指向，从第二个开始，就都是fn的正常参数了
+  7. fn1.call.call(fn2); //2 不管前边有多少call，他执行的是最后一个call方法
+  8. Function.prototype.call.call(fn1); // 1
+  // 如果出现两个及以上call，那最后运行的就是传进去的函数
 
 
 + apply
@@ -2057,3 +2062,75 @@ for (var i = 1; i < ary.length; i++) {
 }
 console.log(max)
 ```
+
+## call继承
+> call继承只能继承类中的私有属性
+```
+function A(){
+    this.x = 10
+}
+A.protopyte.getX = function(){
+    console.log('万事如意')
+}
+function B(){
+    // this->当前实例
+    /* 
+    类B当做构造函数执行时，此时的this是当前实例，
+    */
+    this.a=20
+    A.call(this)// 把函数A当做普通函数执行，并且把函数A的this指向了类B的实例
+}
+ let f = new B;
+// 类B的实例继承了类A的私有属性，但是不能使用类A的公有属性
+// 类B的所有实例都可以使用类A的私有属性
+// console.log(f)
+// f.getX()
+```
+
+## 寄生组合继承
+> object.create(context)://创建一个空对象，让对象的__proto__指向你传的第一个参数
+```
+Object.create(context): // 创建一个空对象，让对象的__proto__指向你传的第一个参数
+    let obj = {
+        ame: 3,
+        getX: function () {
+                console.log(11)
+        }
+    }
+    let o = Object.create(obj)
+    console.log(o);
+    console.log(o.__proto__ === obj) // true
+    创建一个空对象，让空对象的__proto__指向你传递的第一个参数(obj)
+
+
+    function A(){
+            this.a = 10
+        }
+        A.prototype.getX = function(){
+            console.log('恭喜发财')
+        }
+
+        function B(){
+            /* 
+            函数B以构造函数的身份运行
+            那类B中的this指向当前实例
+            */
+            this.x =20;
+            A.call(this); // 让函数A以普通函数身份运行，而且把函数A中的this指向了类B的实例
+        }
+        B.prototype = Object.create(A.prototype);
+        // 创建一个空对象，让空对象的__proto__指向类A的原型，在把这个空对象赋值给类B的原型
+        let f = new B;
+        f.__proto__.getY = function(){
+            console.log(333)
+        };
+        let m = new A;
+        // m.getY()
+        console.log(f)
+        //call继承让类B继承了类A的私有属性，然是不能继承类A的公有属性
+        // console.log(f)
+        // f.getY() // 报错
+        // f.a // 可以取到
+```
+
+**案例：3、call的阿里面试题、4、类数组转数组、5、求一组数的平均数、9、sort的案例**
