@@ -1102,7 +1102,7 @@ let ary = [12,23,45,45];
 ## 4、检测数组中是否包含某一项
 -1、indexOf和lastIndexOf
     + 方法的含义：检测数组是否包含某一项
-    + 方法的参数：(n,m) n是检测是值，在indexOf中m是检测索引开始的位置，在lastIndexOf中m是检测索引结束的位置
+    + 方法的参数：(n,m) n是检测的值，在indexOf中m是检测索引开始的位置，在lastIndexOf中m是检测索引结束的位置
     + 方法的返回值：所检测的值的索引（如果没有就是-1）
     + 原有数组是否发生改变：不发生改变
 
@@ -2134,3 +2134,139 @@ Object.create(context): // 创建一个空对象，让对象的__proto__指向�
 ```
 
 **案例：3、call的阿里面试题、4、类数组转数组、5、求一组数的平均数、9、sort的案例**
+
+## ES6
+1. let和const
+ + let和const没有变量提升，var有变量提升
+ + let和const不能重复声明，var可以
+ + let可以解决暂时性死区
+ + let可以形成块级作用域(大括号结合)
+ + var在全局作用域下声明变量会给window增加键值对，let不会
+ + const定义的常理必须赋值
+
+2. 箭头函数
+ + 箭头函数没有this
+ + 没有arguments
+ + 如果在箭头函数里使用this，那他就会往上一级作用域查找this
+ + 如果只有一个形参，可以去掉小括号
+ + 如果只有return一行代码，可以省略return和大括号
+ + 如果return的是一个对象，你要是省略的话，就给对象加小括号
+ + 给函数的形参赋默认值(普通函数和箭头函数都可以)
+```
+let fn = () => {
+            console.log(this)
+}
+fn()
+
+let obj = {
+    ame:3,
+    fn:function(){
+    // this->obj
+    return ()=>{
+    console.log(this)
+    }
+    }
+}
+```
+
+3. ...运算符
+ + 收缩运算符
+ + 展开运算符
+ + 扩展运算符
+```
+function fn(...g){
+        console.log(g)
+    }
+fn(...[12,34,46,67,78,132,32,34])
+
+let ary = [12,23,45,66];
+// let n = ary[0]
+// let m  =[]
+// 前提是等号的左边和右边结构的一样
+let [m,...a] = ary;
+console.log(m,a) // 12 , [23, 45, 66]
+
+// 我想拿到数组的第一项和最后一项
+// let [x,,,s] = ary;
+console.log(x,s)
+let ary = [12,234,45,[23,435]];
+console.log(ary[3][1]) // 435
+let [m,,,[,x]] = ary
+console.log(m,x) // 12, 435
+
+
+普通对象的解构赋值
+let obj = {
+    name:2,
+    age:3
+}
+let obj1 = {...obj}
+console.log(obj1) // 克隆obj
+
+//在左边的对象里定义变量名，如果这个变量名在右边的对象里有对应的属性名，那就把对应的属性值赋值给左边的变量名
+//如果右边没有这个属性名就是undefined
+//还可以给左边的变量赋默认值
+let {name,age,we = 9} = obj;
+console.log(name, age,we);
+
+let ary = [1,2,3];
+let  [m, , , r = 6] = ary
+console.log(m,r)
+    
+let obj = {
+    name:3,
+    age:4
+    }
+
+let obj = {
+    name:'erYa',
+    age:18,
+    friends:['xioaHua', 'gouDan']
+}
+let {friends:[,s]} = obj
+console.log(s) // 'gouDan'
+```
+
+4. class自定义类
+```
+class Fn {
+    // 这里边放的是实例的私有属性
+    constructor (n,m){
+        this.s = n // 给实例增加私有属性
+    }
+    // 直接在外边写就是给实例添加公有属性(如果赋的值不是一个方法，那就是给实例增加私有属性)
+    getX(){
+        console.log(111)
+    }
+    e = function (params) {
+        console.log(444)
+    }
+    r = 4 // 用等号的形式就是给实例增加私有属性
+    w = {g:333}
+    static m = 10 // 把Fn当做对象，增加键值对
+}
+```
+5. 模板字符串(``)
+```
+ let ss = 25;
+ let str = '<li>'+ss+'</li>';
+    '<li><span>'+ss+'</span><span>'+ss+'</span></li>' //旧
+let str = `<li><span>${ss}</span><span>${ss}</span></li>` //新
+```
+
+## JSON
++ JSON数据格式：他不是数据类型，它是一种数据格式
++ 一般情况下我们从后台请求来的数据都是json格式的
++ JSON数据格式
+    - ：json格式的对象
+    - ：json格式的字符串
++ JSON.parse:把json格式的字符串转换为json格式的对象
++ JSON.stringify:把json格式的对象转换为json格式的字符串
+```
+    let obj = {"name":3}  json格式的对象
+    let obj = '{"name":3}'  // json格式的字符串
+    obj = JSON.parse(obj);
+    console.log(obj.name) // 3
+```
+
+**案例新商城排序(重) 见老师课件正式课第二周第四天**
