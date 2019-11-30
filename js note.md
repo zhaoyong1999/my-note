@@ -713,7 +713,7 @@ for(var key in obj) // 属性名为obj{
 - typeof 检测数据类型的属性
 - instanceof 检测当前实例是否属于某个类
 - constructor 基于构造函数检测数据类型
-- Object.prototype.toString.call()： 检测数据类型最好的方式 他的返回值是一个字符串，里边是 '[object 你当前实例的所属类]'
+- Object.prototype.toString.call()： 检测数据类型最好的方式 他的返回值是一个字符串，里边是 '[object 你当前实例的所属类]'，不能检测基本数据类型
 
 ## typeof 检测数据类型的属性
 - 他的返回值是一个字符串
@@ -1723,6 +1723,8 @@ let a = 12
 4. 给元素事件行为绑定方法，方法里的this指向被绑定的元素本身
 5. 回调函数里的this一般指向window(函数里包函数)
 6. 不能给this直接赋值
+7. 构造函数的this是当前实例
+8. 实例的公有方法和私有方法的this一般情况是当前实例
 
 ## 单例模式
 > 单例模式：把描述同一个事物特征的信息进行分组归类，放到同一个命名空间下(减少全局变量的污染)
@@ -1813,6 +1815,7 @@ function createPerson(name, age){
 > 类就是函数数据类型的
 > 实例是对象数据类型的
 > 构造函数中的this指向当前实例
+> 箭头函数不能被new执行，所以不能当构造函数
 > 构造函数和普通函数的不同
  1. 运行上的不同
     普通函数 ➡ 形成私有作用域 ➡ 形参赋值 ➡ 变量提升 ➡ 代码执行 ➡ 作用域是否销毁
@@ -1888,7 +1891,7 @@ function createPerson(name, age){
     console.log(/^$/ instanceof RegExp) //true RegExp是正则的意思
 
      /* 
-        1、字面量创建实例的方式
+        1、自变量创建实例的方式
         let num = 1;
         let str= 'w';
         2、构造函数创建实例的方式
@@ -1910,6 +1913,14 @@ function createPerson(name, age){
  2. 每一个原型都天生自带一个constructor属性，其属性值指向当前类
  3. 每一个对象都天生自带一个__proto__属性，其属性值指向当前所属类的原型
  4. 构造函数解决了实例的私有属性问题，原型解决了实例的公有属性问题
+
+ 1. Function是每一个函数的基类
+ 2. Object是每一个元素的基类
+ 3. Object的原型的__proto__指向自己，但是没有意义，那就是null
+ 4. 每一个函数都是Function的实例，(包括他自己，他的__proto__执行自己的原型)
+ 5. object是类，类是函数，按他的__proto__指向Function的原型
+ 6. 所有的原型(都是对象)都指向Object的原型
+ 7. Function的原型是个匿名函数()
 例子见2019.11.22老师课件
 
 **函数的三种角色：普通函数、构造函数、普通对象**
@@ -2264,9 +2275,36 @@ let str = `<li><span>${ss}</span><span>${ss}</span></li>` //新
 + JSON.stringify:把json格式的对象转换为json格式的字符串
 ```
     let obj = {"name":3}  json格式的对象
-    let obj = '{"name":3}'  // json格式的字符串
+    let obj = '{"name":3}' // json格式的字符串
     obj = JSON.parse(obj);
     console.log(obj.name) // 3
 ```
 
 **案例新商城排序(重) 见老师课件正式课第二周第四天**
+
+## dom的回流和重绘
+1. dom的回流:当页面的dom产生变化(增加，删除，改变位置，改变大小)都会引发dom的回流，所谓回流，就是把dom重新排列进行渲染，他会非常消耗性能的
+2. 重绘：当某一个dom元素的样式发生改变(比如改变dom的颜色)，不会引起dom的回流，但是会重新绘制
+```
+let box = document.getElementById('box');
+        console.time()
+        for (var i = 0; i < 10; i++) {
+            var cur = document.createElement('li');
+            cur.innerHTML = 111;
+            box.appendChild(cur);
+        }
+        console.timeEnd()
+
+        console.time()
+        let frg = document.createDocumentFragment(); // 创建一个文档碎片；
+        // 创建一个空容器，用来存储dom元素
+        console.log(frg)
+        for (var i = 0; i < 10; i++) {
+           var cur = document.createElement('li');
+           cur.innerHTML = 111;
+           frg.appendChild(cur);
+        }
+        console.log(frg)
+        box.appendChild(frg);
+        console.timeEnd()
+```
