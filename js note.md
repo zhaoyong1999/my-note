@@ -2317,6 +2317,23 @@ let box = document.getElementById('box');
 > 3、正则的第二个作用是“把匹配到的内容找出来”。（exec：捕获）
 > 其实正则只是定义了一个字符串的模型，至于如何去验证字符串和查找字符串，是正则类上的方法完成的。
 
+## 正则的创建方式
+1. 自变量的创建方式
+```
+let reg = /^$/
+```
+2. 构造函数创建方式
+ > 传递的参数是一个字符串
+ > 利用字符串可以拼接的特点，能够实现正则传递变量(两个斜杠包起来的都是元字符，如果正则中要包含某个变量的值，则不能使用自变量方式创建)
+```
+let reg = new RegExp('')
+       
+let m = 'moon';
+let reg1 = /^$/
+let reg = new RegExp('^'+m+'/d$')
+console.log(reg)
+```
+
 ## 正则由两部分组成：元字符和修饰符
 + 修饰符：就是把正则额外的修饰一下
     - i: 忽略单词大小写匹配
@@ -2336,17 +2353,17 @@ let box = document.getElementById('box');
         + ^:以什么什么开头
         + $:以什么什么结尾
         + \n:换行符
-        + \d:0-9之间的数字
-        + \D:非0-9之间的数字
+        + \d:0-9之间的一个数字
+        + \D:非0-9之间的一个数字
         + \w:数字、字母、下划线
         + \s:空白字符(包含换页符，空格，制表符等)
         + \t:制表符(一个TAB键：四个空格)
         + \b:单词边界
-        + x|y:取x、y、z中的任意一个
-        + [xyz]:取x、y、z中的任意一个
-        + [a-z]:在a到z范围内取一个
-        + [^a-z]:在a到z范围外取一个
-        + ():分组，改变了正则处理的优先级
+        + x|y:取x、y中的任意一个
+        + [xyz] 取x、y、z中的任意一个 
+        + [a-z] 在a到z范围内取一个
+        + [^a-z] 在a到z范围外取一个
+        + ():分组，改变了正则处理的优先级,分组捕获
         + (?:):只匹配不捕获
         + (?=):正向预查
         + (?!):负向预查
@@ -2403,7 +2420,7 @@ let box = document.getElementById('box');
     ```
 
 ## 常用正则表达式
- +  手机号匹配
+ + 手机号匹配
     ```
     let reg = /^1[3-9]\d{9}$/
     /* 
@@ -2483,8 +2500,8 @@ let box = document.getElementById('box');
     ```
         let reg = /^\d{17}(\d|X)$/
         let reg1 = /^(\d{6})(\d{4})(\d{2})(\d{2})\d{2}(\d)(?:\d|X)$/;
-        ?:  只匹配不捕获 
-        let reg2 = /^(\d{6})([1-2]\d{3})((0[1-9])|(1[0-2]))((0[1-9])|([1-2][0-9])|(3[0-1]))\d{2}(\d)(\d|X)$/;
+        ?:  只匹配不捕获,  不加括号也不捕获
+        let reg2 = /^(\d{6})([1-2]\d{3})((0[1-9])|(1[0-2]))((0[1-9])|([1-2][0-9])|(3[0-1]))(\d{2})(\d)(\d|X)$/;
     ```
 
 ## 正则的捕获
@@ -2498,5 +2515,55 @@ let box = document.getElementById('box');
  3. 如果你只匹配不捕获，就在小括号里加?:
  4. exec只能捕获到第一次出现的符合正则规则的内容(这是正则捕获的懒惰型，默认只捕获第一个)
 
-> 如果正则不加g,那每一次去捕获，捕获到的都是第一次符合规则的内容lastIndex的值不会变，都是0
-> 如果正则加上g，那每捕获一次，正则的lastIndex就会记录当前捕获到的内容的最后一项索引，下次再捕获的时候从记录的索引的基础上+1，继续捕获
+> match:他是字符串的一个方法，在String类的原型上，这个方法传递一个正则，返回是是一个数组
+ + 如果正则不加g，跟exec返回值一样
+ + 如果加上g会把每一次捕获到的内容放到一个数组里返回
+ + 缺点：如果要进行分组捕获，那他就拿不到分组捕获的内容了
+
+> 正则的懒惰性
+ + 如果正则不加g,那每一次去捕获，捕获到的都是第一次符合规则的内容lastIndex的值不会变，都是0
+ + 如果正则加上g，那每捕获一次，正则的lastIndex就会记录当前捕获到的内容的最后一项索引，下次再捕获的时候从记录的索引的基础上+1，继续捕获
+
+> 正则的贪婪性
+ + 正则在匹配的时候能多匹配一个就多匹配一个，这就是正则的贪婪性
+ + 在量词元字符的右边出现?,那就是取消正则的贪婪性
+```
+ let str = 'zhufeng2019zhufeng2020';
+ let reg1 = /\d+/g
+ let reg = /\d+?/g
+ console.log(str.match(reg)) // ["2", "0", "1", "9", "2", "0", "2", "0"]
+ console.log(str.match(reg1)) // ["2019", "2020"]
+```
+
+**案例myexec 正则的捕获 replace捕获 queryUrlParams 字符串时间格式化**
+
+## js盒子模型
+ 1. client系列
+    + 获取的是数字，而且没有单位
+    + 他的值必须是整数，四舍五入
+    + 是可视区域的宽度或高度
+  - clientWidth: 当前元素可视区域的宽度  宽度+左右padding
+  - clientHeight:当前元素可视区域的高度  高度+上下padding
+  - clientLeft:获取当前元素左边框的宽度
+  - clientTop:获取当前元素上边框的宽度
+```
+// 获取当前浏览器可视窗口的宽度和高度
+// document.documentElement获取当前的html
+let w = documentElement.clientWidth || document.body.clientWidth
+let h = documentElement.clientHeight || document.body.clientHeight
+```
+
+ 2. offset系列
+    + offsetWidth:当前元素的总宽度  clientWidth + 左右border
+    + offsetHeight:当前元素的总高度  clientHeight + 上下border
+    > offset的偏移量
+     + offsetParent:父级参照物
+     + offsetLeft：左偏移量 :从当前元素的左外边框到父级参照物的左内边框
+     + offsetTop：上偏移量 ： 从当前元素的上外边框到父级参照物的上内边框
+     + body的父级参照物是null
+     +  一般情况下所有的父级参照物都是body，如果给元素加上position属性(relative，absolute、fixed)，会让他的所有子孙元素的父级参照物都指向当前这个元素
+    **案例offset偏移量**
+
+ 3. scroll系列
+    + scrollHeight:如果当前元素的文本不溢出，那就等于clientHeight，如果当前元素溢出了，那就是当前的高度+上padding
+    + scrollWidth ：如果当前元素的文本不溢出，那就等于clientWidth，如果当前元素溢出了，那就是当前的宽度+左padding
