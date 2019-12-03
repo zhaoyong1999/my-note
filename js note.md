@@ -1389,7 +1389,7 @@ ary.map((item,index) => {
    //2、context.getElementsByTagName('标签名')  在指定的上下文中通过标签名获取元素，获取的是一个元素集合，如果没有获取到元素，那就是空元素集合
         //2、let lists = nav.getElementsByTagName('i');
 
-  //3、context.getElementsByTagName('')  在指定的上下文中通过class名获取元素，获取的是一个元素集合，如果没有获取到元素，那就是空元素集合【在IE6~8下不兼容】
+  //3、context.getElementsByClassName('')  在指定的上下文中通过class名获取元素，获取的是一个元素集合，如果没有获取到元素，那就是空元素集合【在IE6~8下不兼容】
         
  //4、document.body/document.head/document.documentElement(获取body、头部、html)
         // 4. console.log(document.body) // 获取body
@@ -2308,3 +2308,195 @@ let box = document.getElementById('box');
         box.appendChild(frg);
         console.timeEnd()
 ```
+
+# 正则
+> 正则是js的内置类RegExp
+> 正则就是处理字符串的，它的特长在于处理复杂的字符串
+> 1、正则定义了一个字符串的模型。
+> 2、正则的第一个作用是“验证某字符串是否和这个模型相匹配”（test：匹配一个字符串是否满足这个规则，如果满足于返回true，反之返回false）
+> 3、正则的第二个作用是“把匹配到的内容找出来”。（exec：捕获）
+> 其实正则只是定义了一个字符串的模型，至于如何去验证字符串和查找字符串，是正则类上的方法完成的。
+
+## 正则由两部分组成：元字符和修饰符
++ 修饰符：就是把正则额外的修饰一下
+    - i: 忽略单词大小写匹配
+    - m：多行匹配
+    - g：全局匹配
++ 元字符：量词元字符、普通元字符、特殊元字符
+    - 量词元字符：代表出现的次数
+        + *:代表0到多次
+        + +:出现一到多次
+        + ?:出现0到1次
+        + {n}:出现n次
+        + {n,}:至少出现n次
+        + {n,m}:出现n到m次
+    - 特殊元字符：单个或者多字符组合在一起具有特殊意义
+        + \:转义字符，可以把普通元字符字符转换为特殊的元字符，也可以把特殊元字符转换为普通元字符
+        + .:除了换行符以外的任意字符
+        + ^:以什么什么开头
+        + $:以什么什么结尾
+        + \n:换行符
+        + \d:0-9之间的数字
+        + \D:非0-9之间的数字
+        + \w:数字、字母、下划线
+        + \s:空白字符(包含换页符，空格，制表符等)
+        + \t:制表符(一个TAB键：四个空格)
+        + \b:单词边界
+        + x|y:取x、y、z中的任意一个
+        + [xyz]:取x、y、z中的任意一个
+        + [a-z]:在a到z范围内取一个
+        + [^a-z]:在a到z范围外取一个
+        + ():分组，改变了正则处理的优先级
+        + (?:):只匹配不捕获
+        + (?=):正向预查
+        + (?!):负向预查
+        + []:中括号出现的字符一般都代表他本身
+    - 普通元字符：代表本身含义
+        + let reg = /name/ 此正则匹配的就是"name"
+
+## 元字符详细解析
+  + x|y
+    ```
+        let reg = /^18|29$/
+        console.log(reg.test('18')) // true
+        console.log(reg.test('29')) // true
+        console.log(reg.test('189')) // true
+        console.log(reg.test('129')) // true
+        console.log(reg.test('28')) // false
+        //直接x|y会存在很乱的优先级问题，一般我们写的时候都伴随着()进行分组
+
+        let reg = /^(18|29)$/
+        console.log(reg.test('18')) // true
+        console.log(reg.test('29')) // true
+        console.log(reg.test('189')) // false
+        console.log(reg.test('129')) // false
+        onsole.log(reg.test('28')) // false
+        //加()只能是18或29
+    ```
+
+  + []
+    ```
+        1、中括号里放的一般都是普通字符
+        let reg = /^[@+]$/
+        console.log(reg.test('+')) // true
+        console.log(reg.test('@')) // true
+
+        let reg = /^[\\d]$/
+        console.log(reg.test('d')) // true
+        console.log(reg.test('\\')) // true
+        //\d比较特殊在[]还是0-9的意思 
+
+        2、中括号不允许出现多位数
+        let reg = /^[12-57]$/  //  1  2-5 7
+        console.log(reg.test('30')) // false
+        console.log(reg.test('1')) // true
+        console.log(reg.test('4')) // true
+        console.log(reg.test('7')) // true
+        console.log(reg.test('6')) // false
+    ```
+
+  + 转义字符(\可以把在正则中有特殊意义的字符转义为普通字符，也可以把普通字符转换以有意义的字符)
+    ```
+    let reg = /^23\.45$/
+    console.log(reg.test('23e45')) // false
+    console.log(reg.test('23.45')) // true
+    ```
+
+## 常用正则表达式
+ +  手机号匹配
+    ```
+    let reg = /^1[3-9]\d{9}$/
+    /* 
+    1、十一位数字
+    2、第一位是1，第二位是3到9的数字
+    */
+    console.log(reg.test('15231105887'))
+    ```
+
+ + 1、匹配有效数字：1、1.5、+2、0、-1
+        1、开头有可能是+-号，也有可能没有    ?
+        2、如果是个位数[0-9]   两位数 ([1-9]\d+)
+        3、小数  (\.\d+)? 可以不出现，也可以出现1次
+    
+    ```
+      let reg = /^[+-]?(\d|([1-9]\d+))(\.\d+)?$/
+      console.log(reg.test('2')) // true
+      console.log(reg.test('2.5')) // true
+      console.log(reg.test('-2')) // true
+      console.log(reg.test('+2')) // true
+      console.log(reg.test('2.')) // false
+      console.log(reg.test('2..')) // false
+      console.log(reg.test('3.1415926')) // true
+    ```
+
+ + 2、匹配密码
+        1、6到16位组成
+        2、由数字、字母、下划线组成
+        let reg = /^\w{6,16}$/
+        
+    ```
+       function fn(str){
+           if(str.length<6 || str.length>16 ){
+            alert('密码不符合规范');
+            return
+           }
+           let ary = ['2','_','....'] // 由数字、字母、下划线组成
+           for (var i = 0; i < str.length; i++) {
+                if(!ary.includes(str[i])){
+                    alert('密码不符合规范');
+                    return
+                }
+           }
+       }
+    ```
+
+ + 3、邮箱
+        let reg = /^[a-zA-Z0-9-_]+@[a-z0-9]+(\.[a-z]+)+$/
+        12344@qq.com
+
+    ```
+        let reg = /^[a-zA-Z0-9-_]+@[a-z0-9]+(\.[a-z]+)+$/;
+        console.log(reg.test('12344@qq.com.cn')) // true
+        console.log(reg.test('12344@qq.com')) // true
+        console.log(reg.test('12344@qq..com')) // false
+        console.log(reg.test('@qq.com')) // false
+        console.log(reg.test('-@qq.com')) // false
+    ```
+
+ + 4、匹配中文名字  [\u4E00-\u9FA5]
+            let reg = /^[\u4E00-\u9FA5]{3,6}(·[\u4E00-\u9FA5]{2,6}){0,2}$/
+    
+    ```
+        let reg = /^[\u4E00-\u9FA5]{2,6}(·[\u4E00-\u9FA5]{2,6}){0,2}$/;
+        console.log(reg.test('爱新觉罗·溥仪'))
+        console.log(reg.test('阿诺德·施瓦辛格'))
+    ```
+
+ + 5、身份证：
+        1、18位
+        2、前6位是省市
+        3、中间8位是生日
+        4、倒数四位
+            1、前两位是公安局代码
+            2、第三位是性别，奇数是男，偶数是女
+            3、最后一位是数字，有可能是X
+    ```
+        let reg = /^\d{17}(\d|X)$/
+        let reg1 = /^(\d{6})(\d{4})(\d{2})(\d{2})\d{2}(\d)(?:\d|X)$/;
+        ?:  只匹配不捕获 
+        let reg2 = /^(\d{6})([1-2]\d{3})((0[1-9])|(1[0-2]))((0[1-9])|([1-2][0-9])|(3[0-1]))\d{2}(\d)(\d|X)$/;
+    ```
+
+## 正则的捕获
+> exec：他是正则实例的一个公有属性，他是用来捕获符合规则的字符串的
+ 1. 返回值：是一个数组，如果捕获不到就是null
+ 2. 如果是数组
+    1、第一项是最大的捕获内容
+    2、以后数组的后几项就是分组捕获的内容
+    3、index是第一次捕获位置的索引
+    4、input是原字符串
+ 3. 如果你只匹配不捕获，就在小括号里加?:
+ 4. exec只能捕获到第一次出现的符合正则规则的内容(这是正则捕获的懒惰型，默认只捕获第一个)
+
+> 如果正则不加g,那每一次去捕获，捕获到的都是第一次符合规则的内容lastIndex的值不会变，都是0
+> 如果正则加上g，那每捕获一次，正则的lastIndex就会记录当前捕获到的内容的最后一项索引，下次再捕获的时候从记录的索引的基础上+1，继续捕获
