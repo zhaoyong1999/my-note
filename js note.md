@@ -2372,7 +2372,7 @@ console.log(reg)
         + let reg = /name/ 此正则匹配的就是"name"
 
 ## 元字符详细解析
-  + x|y
+  + x|y在正则中的作用
     ```
         let reg = /^18|29$/
         console.log(reg.test('18')) // true
@@ -2391,7 +2391,7 @@ console.log(reg)
         //加()只能是18或29
     ```
 
-  + []
+  + []在正则中的作用
     ```
         1、中括号里放的一般都是普通字符
         let reg = /^[@+]$/
@@ -2418,6 +2418,24 @@ console.log(reg)
     console.log(reg.test('23e45')) // false
     console.log(reg.test('23.45')) // true
     ```
+ 
+  + ()在正则中的作用
+    + 改变优先级
+    + 分组捕获
+    + 分组引用
+```
+正则的捕获：
+let reg = /^[a-z]([a-z])\1$/
+    console.log(reg.test('see')) //true
+
+```
+
+  + ?在正则中的作用
+    + 问号左边是非量词元字符:本身代表量词元字符，出现0到1次
+    + 问号左边是量词元字符:取消捕获时候的贪婪性
+    + (?:) 只匹配不捕获
+    + (?=) 正向预查
+    + (?!) 反向预查
 
 ## 常用正则表达式
  + 手机号匹配
@@ -2515,10 +2533,40 @@ console.log(reg)
  3. 如果你只匹配不捕获，就在小括号里加?:
  4. exec只能捕获到第一次出现的符合正则规则的内容(这是正则捕获的懒惰型，默认只捕获第一个)
 
+
 > match:他是字符串的一个方法，在String类的原型上，这个方法传递一个正则，返回是是一个数组
  + 如果正则不加g，跟exec返回值一样
  + 如果加上g会把每一次捕获到的内容放到一个数组里返回
- + 缺点：如果要进行分组捕获，那他就拿不到分组捕获的内容了
+ + 缺点：多次匹配的情况下(加上g)，如果要进行分组捕获，那他就拿不到分组捕获的内容了
+
+> replace
+```
+let str = 'zhufeng33zhufeng33';
+let reg = /[a-z]+/g
+str = str.replace(reg,function(content){
+    console.log(content)
+    console.log(arguments)
+    1.正则匹配几次，回调函数就执行几次
+    2.当执行的时候，他会把捕获的内容当作回调函数的实参传给回调函数
+    3.回调函数的返回值(就是return后面的东西)就替换当前捕获到的内容
+    return 'zhufengpeixun'
+})
+console.log(str)
+
+let str = 'good day';
+let reg = /\b([a-z])/[a-z]+\b/g
+str = str.replace(reg,(word,firstWord) =>{
+    console.log(word,firstWord)
+    1.先把首字母转大写
+    2.截取单词第一项往后的单词
+    3.把转大写的首字母和截取到的字母拼接到一起
+    4.用拼接后的单词替换捕获到的内容
+    firstWord = firstWord.toUpperCase();
+    word = word.slice(1);
+    reture firstWord + word
+})
+console.log(str)
+```
 
 > 正则的懒惰性
  + 如果正则不加g,那每一次去捕获，捕获到的都是第一次符合规则的内容lastIndex的值不会变，都是0
@@ -2526,7 +2574,7 @@ console.log(reg)
 
 > 正则的贪婪性
  + 正则在匹配的时候能多匹配一个就多匹配一个，这就是正则的贪婪性
- + 在量词元字符的右边出现?,那就是取消正则的贪婪性
+ + 在量词元字符的右边加?,那就是取消正则的贪婪性(按照正则匹配的最短结果来获取)
 ```
  let str = 'zhufeng2019zhufeng2020';
  let reg1 = /\d+/g
@@ -2539,6 +2587,7 @@ console.log(reg)
 
 ## js盒子模型
  1. client系列
+    + 它不受内容溢出的影响
     + 获取的是数字，而且没有单位
     + 他的值必须是整数，四舍五入
     + 是可视区域的宽度或高度
@@ -2565,5 +2614,22 @@ let h = documentElement.clientHeight || document.body.clientHeight
     **案例offset偏移量**
 
  3. scroll系列
-    + scrollHeight:如果当前元素的文本不溢出，那就等于clientHeight，如果当前元素溢出了，那就是当前的高度+上padding
-    + scrollWidth ：如果当前元素的文本不溢出，那就等于clientWidth，如果当前元素溢出了，那就是当前的宽度+左padding
+    + scrollHeight:如果当前元素的文本不溢出，那就等于clientHeight，如果当前元素溢出了，那就是当前的高度+上下padding
+    + scrollWidth:如果当前元素的文本不溢出，那就等于clientWidth，如果当前元素溢出了，那就是当前的宽度+左右padding
+**这11个属性是可读属性，只能读不能写**
+
+## getCss
+> 获取元素的css样式
+ 1. 元素.style.width 这是获取的行内样式
+ 2. getComputedStyle
+    + 他是window上的一个属性
+    + 他既能获取样式表里的样式，也能获取行内的样式
+    + getComputedStyle(元素).属性名
+ 3. currentStyle
+    + 这个属性只在IE下存在
+    + 元素.currentStyle.属性名
+
+### scrollLeft scrollTop
+ + scrollLeft:当前元素横向滚动条卷去的长度
+ + scrollTop:当前元素纵向滚动条卷去的高度
+ + 它俩既可读，又可写
