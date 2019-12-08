@@ -1,5 +1,5 @@
 # jQuery
- > jQuery是·一款用原生js封装的，基于这些方法，可以使我们快速的去操作dom和构建我们的项目
+ > jQuery是一款用原生js封装的，操作dom的类库，他里面封装这大量的方法，基于这些方法，可以使我们快速的去操作dom和构建我们的项目
 
 ## jQuery的基础
  > 如何学习它
@@ -30,11 +30,11 @@ $('.box').find('li').filter('.active')
 
  2. 节点之间的属性
     + prev() 获取上一个同辈元素
-    + prev('span') 获取标签名为span的同辈元素
-    + prevAll() 获取所有的同辈元素
+    + prev('span') 获取上一个标签名为span的同辈元素
+    + prevAll() 获取当前元素之前所有的同辈元素
     + next() 获取下一个同辈元素
     + next('span') 获取下一个标签名span的同辈元素
-    + nextAll 获取所有的同辈元素
+    + nextAll 获取当前元素之后所有的同辈元素
     + parent() 获取父亲元素
     + parents() 获取所有的祖先元素
 ```
@@ -73,7 +73,7 @@ $('.box').parents() //获取所有的父级元素，直到document
     + $('.box').css({
         width:100,
         height:100
-     })
+     }) //设置一组css样式。
     + $('.box').addClass('active') //添加指定的类名。
     + $('.box').removeClass('active') //删除指定的类名
     + $('.box').hasClass('active') //检测当前元素是否拥有当前的class名，如果有就是true，没有就是false
