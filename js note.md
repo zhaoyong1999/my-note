@@ -67,12 +67,13 @@ QQ、360、火狐(FireFOX)、谷歌(Chrome)、IE、朋克(Opera)、safair
     + Date 日期对象的实例
     + /^$/ 正则
   + function 函数
+  + symbor 创建唯一值
 
 ## number数字类型
 > 有效数字 3，5.5 ，-4.4，0，+7
 > NaN (not a number)不是一个数，但是它是number的一种数字类型
 
-### NaN和谁也不相等（包括自己）
+**NaN和谁也不相等（包括自己）**
 
  ### 把其他数据类型转数字类型 Number(val)
     - 把字符串转数字：
@@ -93,7 +94,7 @@ QQ、360、火狐(FireFOX)、谷歌(Chrome)、IE、朋克(Opera)、safair
             + 所有的普通对象转字符串都是 '[object Object]'
             + 所有的普通对象转数字都是NaN
             
-        + 把数组转数字先，把值转换为字符串，在把字符串转换为数字
+        + 把数组转数字先把值转换为字符串，在把字符串转换为数字
             + 数组转字符串=> 把中括号去掉，然后把数组的每一项都去做toString处理，然后拼接到一起  (，不能丢)
 
 
@@ -318,6 +319,10 @@ let pigFather = null;
         + 真删除   delete 对象名.属性名
 （以上的操作 “对象名.属性名”都可以改为对象名['属性名']；两种方式，用哪个都可以）
 ## 普通对象
+> 对象的定义
+  1. 开辟一个堆内存；这个堆内存对应十六进制的地址
+  2. 把对象中的键值对储存到堆地址中
+  3. 把这个空间地址赋值给变量名 
 ```
 <script>
         let monkey = {
@@ -474,20 +479,20 @@ let pigFather = null;
 ```
 
 ## 三个判断
-    + function 判断语句 循环语句
-        三个判断：
-        1.if else
-		      >逻辑且：&&左右两边都成立，这个条件成立；只要左右两边一个是false，整体结果就是flase。     
-	         &&：如果前边的值转布尔是true，那就取后面的值，如果不是就反之，取前面的
+  + function 判断语句 循环语句
+    三个判断：
+    1. if else
+       > 逻辑且：&&左右两边都成立，这个条件成立；只要左右两边一个是false，整体结果就是flase。     
+	     &&：如果前边的值转布尔是true，那就取后面的值，如果不是就反之，取前面的
 	         
-            >逻辑或：|| 只要左右两边有一个成立的，整体结果就是true
-            || ：如果前面的值转布尔是true，那就取前面的值；false就取后面的值
+       > 逻辑或：|| 只要左右两边有一个成立的，整体结果就是true
+         || ：如果前面的值转布尔是true，那就取前面的值；false就取后面的值
             
-            > %：取余数
-            > += / -=
+       > %：取余数
+       > += / -=
             
-        2.三元运算符
-        3.switch case
+    2. 三元运算符
+    3. switch case
 
     + 等号的含义
      = : 赋值
@@ -496,7 +501,7 @@ let pigFather = null;
 
      === : 绝对比较，会比较数据类型和值；不进行数据类型转换，只要数据类型不一样或者值不相同，返回false
 
- 1. if else;
+1. if else;
     ```
         if (条件) {
             条件成立执行的代码
@@ -519,15 +524,14 @@ let pigFather = null;
 2. 三元运算符：适合简单的if else；
         ```
         // 构造： 条件 ？ 条件成立执行的代码 ：后面是不成立执行的代码；
-
         []==false ? console.log(100) : console.log(200);
-        //多个判断时
 
+        //多个判断时
         []==false ? ([]==[]?console.log(100):console.log(200)): console.log(300);
         ```
 
-3.switch case
-        ```
+3. switch case
+    ```
         switch (num) {
             // num会和case后面的值进行绝对比较
             case '100':
@@ -535,14 +539,14 @@ let pigFather = null;
                 console.log(100);
                 // break为中断代码执行，到这里停止，如果switch不加这个命令的话会输出下面的所有结果
                 break;
-		 case 1:
-        console.log(200);
-        break;
+		    case 1:
+                console.log(200);
+                break;
 
-	    // default为以上所有比较结果都为false时输出
-      default:
-        console.log(300);
-        break;
+	        // default为以上所有比较结果都为false时输出
+             default:
+                console.log(300);
+                break;
        };
         
         let num = 80;
@@ -556,14 +560,13 @@ let pigFather = null;
 
 ## 元素
 > 在html中叫标签，在js叫元素；js中的元素都是对象数据类型的；
-        + 要想操作谁，就要先获取谁
-        + document.getElementById: 在document文本下，通过id获取元素
+   + 要想操作谁，就要先获取谁
+   + document.getElementById: 在document文本下，通过id获取元素
         document: 上下文文本
         get:获取
         Element:元素
         By:通过
         Id:id名
-
 ```
 <body>
     <div id="box" style="background: red;"></div>
@@ -584,19 +587,19 @@ let pigFather = null;
 </body>
 ```
 
- > 三个循环：for、 for in、 while
- 1.for循环
-            四部曲：
-            1.初始化一个变量i=0；
-            2.判断条件是否成立；
-            3.执行循环体；
-            4.执行i++   (i++:在自身基础上+1，是先取值在运算，意思是先循环然后再加1；    ++i：在自身基础上+1是先运算再取值，意思是先加1再循环)
-           for循环的过程： 1-->2-->3-->4-->2-->3-->4
-            当条件不成立时，中止循环；
-			 >break 终止代码运行
-            >continue 中止本轮循环
-			>逻辑且：&&左右两边都成立，这个条件成立；只要左右两边一个是false，整体结果就是flase。
-            >逻辑或：|| 只要左右两边有一个成立的，整体结果就是true
+> 三个循环：for、 for in、 while
+ 1. for循环
+    四部曲：
+    1. 初始化一个变量i=0；
+    2. 判断条件是否成立；
+    3. 执行循环体；
+    4. 执行i++   (i++:在自身基础上+1，是先取值在运算，意思是先循环然后再加1；    ++i：在自身基础上+1是先运算再取值，意思是先加1再循环)
+        for循环的过程： 1-->2-->3-->4-->2-->3-->4
+        当条件不成立时，中止循环；
+		> break 终止代码运行
+        > continue 中止本轮循环
+		> 逻辑且：&&左右两边都成立，这个条件成立；只要左右两边一个是false，整体结果就是flase。
+        > 逻辑或：|| 只要左右两边有一个成立的，整体结果就是true
 ```
 /*  let arr=[100,2,7,8,3,4,5];
         for (let i = 0; i < arr.length; i++) {
@@ -675,7 +678,7 @@ let pigFather = null;
         } // 200
 ```
   
-2.while 循环
+ 2. while 循环
     (1). 当不知道循环多少次时，会使用到while；
     (2). while 阻塞线程；
     ```
@@ -687,11 +690,11 @@ let pigFather = null;
     }   
     ```
 
-3.for in (一般用来对象)循环
- + 会把对象中属性名是数字的先输出，并且按照从小到大的顺序输出
- + 在for in里获取每一项属性名所对应的属性值，必须用obj[key]的形式 
- + 每一项属性名对应的属性值  
- + for in可以遍历出公有属性和私有属性
+ 3. for in (一般用来对象)循环
+    + 会把对象中属性名是数字的先输出，并且按照从小到大的顺序输出
+    + 在for in里获取每一项属性名所对应的属性值，必须用obj[key]的形式 
+    + 每一项属性名对应的属性值  
+    + for in可以遍历出公有属性和私有属性
 
 ```
 let obj = {
@@ -713,7 +716,7 @@ for(var key in obj) // 属性名为obj{
 - typeof 检测数据类型的属性
 - instanceof 检测当前实例是否属于某个类
 - constructor 基于构造函数检测数据类型
-- Object.prototype.toString.call()： 检测数据类型最好的方式 他的返回值是一个字符串，里边是 '[object 你当前实例的所属类]'，不能检测基本数据类型
+- Object.prototype.toString.call()：检测数据类型最好的方式 他的返回值是一个字符串，里边是'[object 你当前实例的所属类]'，不能检测基本数据类型
 
 ## typeof 检测数据类型的属性
 - 他的返回值是一个字符串
@@ -770,7 +773,7 @@ for(var key in obj) // 属性名为obj{
          (function(m){
              console.log(m)
 	        })(1)
-	      //括号里的数就是运行次数
+	      //括号里的数就是实参
 ``` 
 
 # 1、讲解函数的运行原理（画图）
@@ -791,9 +794,9 @@ for(var key in obj) // 属性名为obj{
     console.log(name);
     //把函数中的代码以字符串的形式存储进去,存到堆内存
 
-        //函数每执行一次就会形成私有栈内存，把堆内存中的字符串拿过来转换为代码执行
+    //函数每执行一次就会形成私有栈内存，把堆内存中的字符串拿过来转换为代码执行
 
-        //外边拿不到函数体里边的东西，在函数体里边可以拿到外边的东西
+    //外边拿不到函数体里边的东西，在函数体里边可以拿到外边的东西
 
     ```  
 
@@ -1409,7 +1412,7 @@ ary.map((item,index) => {
 节点名      nodeType     nodeName        nodeValue
 元素节点       1       大写的标签名          null
 文本节点       3         '#text'         文本的内容
-注释节点       8         '#comment'       注释的内容
+注释节点       8         '#comment'      注释的内容
 文档节点       9         '#document'        null 
        
 
@@ -1865,7 +1868,7 @@ function createPerson(name, age){
 1、普通函数：
     1、形参、实参、arguments、箭头函数、arguments.callee、return
     2、私有作用域、闭包、this、变量提升、私有变量、
-    3、形成私有作用、形参赋值、变量提升、代码执行、作用域是否销毁
+    3、形成私有作用域、形参赋值、变量提升、代码执行、作用域是否销毁
     4、作用域链
 2、构造函数
     1、形成私有作用、形参赋值、变量提升、默认生成一个空对象、让函数里的this指向当前对象、代码执行、默认把this return出去、作用域是否销毁
