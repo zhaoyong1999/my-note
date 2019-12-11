@@ -1386,24 +1386,24 @@ ary.map((item,index) => {
         let sss = time.getTime(); //它是现在距离1970年1月1号00时00分00秒的时间差(单位是毫秒) [时间戳]
 
 # 获取dom的方式
-//1、document.getElementById('id名') 在document上下文中获取元素(通过Id获取的元素是一个元素对象)
-    // 1、let box = document.getElementById('box')
+1、document.getElementById('id名') 在document上下文中获取元素(通过Id获取的元素是一个元素对象)
+1、let box = document.getElementById('box')
 
-   //2、context.getElementsByTagName('标签名')  在指定的上下文中通过标签名获取元素，获取的是一个元素集合，如果没有获取到元素，那就是空元素集合
-        //2、let lists = nav.getElementsByTagName('i');
+2、context.getElementsByTagName('标签名')  在指定的上下文中通过标签名获取元素，获取的是一个元素集合，如果没有获取到元素，那就是空元素集合
+2、let lists = nav.getElementsByTagName('i');
 
-  //3、context.getElementsByClassName('')  在指定的上下文中通过class名获取元素，获取的是一个元素集合，如果没有获取到元素，那就是空元素集合【在IE6~8下不兼容】
+3、context.getElementsByClassName('')  在指定的上下文中通过class名获取元素，获取的是一个元素集合，如果没有获取到元素，那就是空元素集合【在IE6~8下不兼容】
         
- //4、document.body/document.head/document.documentElement(获取body、头部、html)
-        // 4. console.log(document.body) // 获取body
-        //    console.log(document.head) // 获取头部
-        //    console.log(document.documentElement) // 获取html
+4、document.body/document.head/document.documentElement(获取body、头部、html)
+4、 console.log(document.body) // 获取body
+    console.log(document.head) // 获取头部
+    console.log(document.documentElement) // 获取html
 
-//5、context.querySelector()  在指定上下文中通过选择器获取第一个元素，获取不到就是null【在IE6~8下不兼容】
-        //let ss =  box.querySelector('#navList .a');
+5、context.querySelector()  在指定上下文中通过选择器获取第一个元素，获取不到就是null【在IE6~8下不兼容】
+   let ss =  box.querySelector('#navList .a');
 
-//6、context.querySelectorAll()  在指定上下文中通过选择器获取一组元素集合，获取不到就是空元素集合【在IE6~8下不兼容】
-        //let list = document.querySelectorAll('#navList li:nth-child(2)');
+6、context.querySelectorAll()  在指定上下文中通过选择器获取一组元素集合，获取不到就是空元素集合【在IE6~8下不兼容】
+    let list = document.querySelectorAll('#navList li:nth-child(2)');
 
 
 # 节点
@@ -1549,8 +1549,11 @@ removeAttribute('属性名'); 在元素结构中移除属性
 
  + 全局变量
     在全局作用域下声明的变量就是全局变量
+    > 在全局作用域下给window创建属性的办法1.在全局作用域下直接创建 a=100; 2.var 3.function
+    > 给window新增键值对是发生在变量提升的阶段
 
-     1. 用var和function声明的变量会在全局作用域下声明一个变量，而且也会给window增加属性，属性名是变量名，属性值是变量名储存的值(let不支持)
+
+    1. 用var和function声明的变量会在全局作用域下声明一个变量，而且也会给window增加属性，属性名是变量名，属性值是变量名储存的值(let声明的变量不能给window增加键值对，const声明的常量也不能新增键值对)
      ```
      var s = 12;
      function fn(){}
@@ -1560,7 +1563,7 @@ removeAttribute('属性名'); 在元素结构中移除属性
      console.log(window.a) // undefined
      ```
 
-     1. var和function可以重复创建同一个变量名(let不可以)
+    2. var和function可以重复创建同一个变量名(let不可以在同一个作用域中重复声明)
      ```
      var a = 12;
      var a = 13;
@@ -1570,7 +1573,7 @@ removeAttribute('属性名'); 在元素结构中移除属性
      let a = 13;
      ```
 
-     1. var和function有变量提升(let没有)
+    3. var和function有变量提升(let不进行变量提升，在代码运行以前，会对当前作用域下带let进行解析，判断是否有重名的变量；有的话，就直接报错)
      ```
      
      b = 12 // 等价于window.b = 12因为window.可以省略
@@ -1604,16 +1607,25 @@ removeAttribute('属性名'); 在元素结构中移除属性
         3、变量提升
         4、代码从上往下执行
         5、作用域是否被销毁
+ + return的作用
+    1. 阻断函数代码运行
+    2. 把值ruturn出去
 
  +  私有变量
     1. 在私有作用域里边定义的变量就是私有变量（let、var、function、const）
     2. 形参也是私有变量(形参和arguments存在映射关系)
     3. 在私有作用域里使用一个变量，如果自己私有作用域有，就是用自己的，如果没有呢，就是用上一级作用域的
     4. 函数外边不能拿到函数里边的变量
+    5. 如何判断当前变量是一个私有变量
+        + 当前作用域有没有被var
+        + 有没有被function
+        + 是否是形参
 
 ## 变量提升
  + 变量提升就是浏览器解析代码的一个过程
  + 在当前作用域中，代码执行之前，浏览器会对当前作用域里的带var和function进行提前的声明和定义；带var的只声明（创建变量）不定义；带function既声明（创建变量）又定义（进行赋值）
+ + 在变量提升时，首先对当前作用域下的函数进行变量提升，然后再对var变量提升
+ + let不进行变量提升，在代码运行以前，会对当前作用域下带let进行解析，判断是否有重名的变量；有的话，就直接报错
  ```
     console.log(window.a); // undefined
     console.log(b); // 报错 引用错误 在当前代码之后的代码不在运行
@@ -1639,7 +1651,7 @@ removeAttribute('属性名'); 在元素结构中移除属性
  > 在新版本浏览器里，if条件里的函数只声明不定义
  >  条件一旦成立，第一件事就是给函数名赋值,然后在执行代码
     ```
-    console.log(fn); // undefined
+        console.log(fn); // undefined
         // var和function给window增加属性的过程是变量提升的时候发生的
         if ('fn' in window) {
             // 如果条件成立，进来的后的第一件事就是给fn赋值，然后在执行代码
@@ -1661,6 +1673,8 @@ removeAttribute('属性名'); 在元素结构中移除属性
     ```
 3. 函数里虽然return下面的代码不执行，但是要进行变量提升
 4. 匿名函数不进行变量提升
+5. return的代码不进行变量提升
+6. 自执行函数不进行变量提升
 
 
 ## 暂时性死区

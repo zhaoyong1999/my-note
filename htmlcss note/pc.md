@@ -491,7 +491,9 @@ border-radius: 50%;
             background: green;
             奇数行变红
         } 
-   
+
++ <!-- 通过角度添加渐变色   -->
+    background:linear-gradient(45deg,red,blue,green) ;
 
 
 
