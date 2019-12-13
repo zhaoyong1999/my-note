@@ -1761,15 +1761,29 @@ fn()()
 ## this
 > this:他是js中的关键字，有特殊的含义
 > this:他就是函数的执行主体，谁执行的函数this就是谁
+
 1. 在全局作用域下，this就是window
 2. 函数执行时，看执行函数前有没有“.”,如果有点，那点前面是谁，this就是谁，如果没有点，那this就是window
 3. 自执行函数里的this是window
 4. 给元素事件行为绑定方法，方法里的this指向被绑定的元素本身
-5. 回调函数里的this一般指向window(函数里包函数)
-6. 不能给this直接赋值
+5. 回调函数里的this一般指向window(函数的参数是函数执行，执行的函数就是回调函数)
+6. 不能给this直接赋值，this 不能放到等号的左边
 7. 构造函数的this是当前实例
 8. 实例的公有方法和私有方法的this一般情况是当前实例
 9. 箭头函数没有this
+10. call,apply,bind 可以改变this指向；
+
+```
+function A(){
+    console.log(this); 
+}
+function B(a){
+    var obj = {a:a}
+    obj.a();
+}
+B(A)
+//回调函数的this指向可以改变，不一定是window
+```
 
 ## 单例模式
 > 单例模式：把描述同一个事物特征的信息进行分组归类，放到同一个命名空间下(减少全局变量的污染)
@@ -1791,15 +1805,16 @@ fn()()
     // person1变量名就是命名空间
 ```
 ### 高级单例模式
-> 把单例模式封装到一个自执行函数里
+> 把单例模式封装到一个自执行函数里 (闭包)
 ```
 let person1 = (function(){
-        let fn = function(){};
+        let age = 18;
         let name= 'erYa';
         return {
-            name:name,
-            age:18,
-            fn:fn
+            bar:function(){
+                var num = 100;
+            };
+            fn:function(){};
         }
     })()
 
@@ -1827,6 +1842,8 @@ let person1 = (function(){
 ```
 
 ## 工厂模式
+> 工厂模式：函数的封装
+> 把实现同一个功能的代码放在一个函数体中，当想实现类似的功能时，直接执行这个函数就可以，减少了代码的冗余：实现了高内聚，低耦合：就是行数的封装
 > 如果用单例模式去写很多个person就会变的很麻烦，就有了工厂模式
 > 特点：批量生产
 > 把实现相同功能的代码封装到函数里，以后想运行这个方法，就直接执行这个函数就好了
@@ -1848,7 +1865,7 @@ function createPerson(name, age){
        console.log(person1, person2);
 ```
 
-## 面向对象
+## 面向对象(重)
 标记语言：HTML/CSS3
 编程语言：JavaScript、PHP、C.....
 面向过程：C
