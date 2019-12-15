@@ -115,3 +115,7 @@ console.log(a); //1
 + this不能放在等号左边
 
 + jquery的源码的外层就是采用了这种高级单例的模式；
+
++ 用取整要加10进制  parseInt(a,radix:10);
+
++  <textarea type='text' id="num1">输入数字</textarea>  实时获取文字方法  名字.value
