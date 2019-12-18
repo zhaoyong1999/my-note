@@ -1,3 +1,5 @@
++ "use strict"; 严格模式
+
 + alert 的结果都要加''，弹出的值都是字符串
   
 + alert alert会在浏览器描绘dom之前执行
@@ -29,6 +31,8 @@
 + 函数声明和匿名函数自执行需要加()或+或-或!
   
 + Object.keys()  :将对象中所有的属性名放到一个数组中
+
++ Object.create() :将对象中所有的属性值放到一个数组中
   
 + 
 ```
@@ -119,3 +123,5 @@ console.log(a); //1
 + 用取整要加10进制  parseInt(a,radix:10);
 
 +  <textarea type='text' id="num1">输入数字</textarea>  实时获取文字方法  名字.value
+
++ 在全局作用域中存在n，windom中也存在n，会先找全局，再找windom

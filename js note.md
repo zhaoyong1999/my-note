@@ -61,15 +61,12 @@ QQ、360、火狐(FireFOX)、谷歌(Chrome)、IE、朋克(Opera)、safair
   + undefined 未定义
 - 引用数据类型
   + objest 对象
-    + 普通对象 {nam................e:'xxx'}
-    + 数组 []
+    + 普通对象 {nam................e:'xxx'} object
+    + 数组 [] array                                                                                                       
     + Math 数学对象
     + Date 日期对象的实例
     + /^$/ 正则
-  + function 函数
-  + symbor 创建唯一值
-
-## number数字类型
+  + function 函数 
 > 有效数字 3，5.5 ，-4.4，0，+7
 > NaN (not a number)不是一个数，但是它是number的一种数字类型
 
@@ -1957,6 +1954,44 @@ function createPerson(name, age){
 > instanceof只要检测的类在实例的原型链上，那么就返回true
 > 【局限性】：instanceof不能够检测基本数据类型，只能检测引用数据类型的值
 
+**创建变量**
+> 字面量方式创建变量
+  + 通过字面量方式创建的基本数据类型值不是一个标准的实例，不能使用instrnceof进行检测，引用数据类型方式创建的就是一个标准的实例，可以使用instrnceof检测
+
+```
+var num = 1;
+console.log(num instanceof Number); //false
+var obj = {};
+console.log(obj instanceof Object); //true
+var ary = [];
+console.log(ary instanceof Array); //true
+```
+> 实例创建
+```
+var num = new Number(1);
+console.log(typeof num); //'object'
+console.log(num instanceof Number);//true
+console.log(num); //Number {1}
+console.log(num+1) //2
+console.log(num == 1 ) //true
+
+//如果实例创建的数组的参数是数字并且只有一个参数，那就代表数组的length；如果大于等于两个，那么就是数组的每一项；
+var  arr = new Array(100,200);
+console.log(arr); //[100,200]
+console.log(typeof Array); //function
+var arr = new Array("a");
+console.log(arr); //['a']
+
+//Function是所有函数数据类型的基类
+var f = new Function；
+console.log(f); //(function anonymous() {})
+var p1 = new f;
+console.log(p1); //{}
+var ary = [];
+//ary是Array的实例，Array是Function的实例；
+console.log(Array  instanceof Function);//true
+```
+
 ```
     let ary = [];
     let obj = {name:1};
@@ -1988,7 +2023,7 @@ function createPerson(name, age){
  1. 每一个函数(普通函数、构造函数)都天生自带一个prototype属性，属性值是一个对象，他里面储存的是实例的公有属性(原型)
  2. 每一个原型都天生自带一个constructor属性，其属性值指向当前类
  3. 每一个对象都天生自带一个__proto__属性，其属性值指向当前所属类的原型
- 4. 构造函数解决了实例的私有属性问题，原型解决了实例的公有属性问题
+ 4. 构造函数解决了实例的私有属性问题，原型解决了实例的公有属性问题;如果将实例的私有属性放在公有属性上，减少了堆内存的开辟
 
  1. Function是每一个函数的基类
  2. Object是每一个元素的基类
@@ -2001,8 +2036,7 @@ function createPerson(name, age){
 
 **函数的三种角色：普通函数、构造函数、普通对象**
 + 函数数据类型：普通函数、构造函数（类）
-+ 对象数据类型：普通对象、数组、Math、Date的实例、arguments类数组、
-+ 正则对象、实例对象、原型、元素集合(类数组)、函数
++ 对象数据类型：普通对象、数组、Math、Date的实例、arguments类数组、正则对象、实例对象、原型、元素集合(类数组)、函数
 
 ## hasOwnProperty
 > hasOwnProperty:检测一个属性是否是自己的私有属性
@@ -2024,17 +2058,46 @@ let ary = [1, 2, 3];
 4、所有的函数都是Function的实例，那Object类的__proto__指向Function的原型
 5、Function也是函数，所以他的__proto__指向自己的原型
 
+**原型扩展**
+1. 给Fn的原型新增键值对，这就是原型扩展
+2. 用新的空间地址覆盖fn原有的空间地址，会导致constructor的丢失
+```
+Fn.prototype.getX=function(){} //增加键值对
+Fn.prototype={
+            constructor:Fn,
+            getY:function(){
+            }
+        }
+//重新覆盖地址 此时constructor会丢失，但是可以手动添加一个
+```
+> 内置原型的扩展方法 (添加键值对的方法)
+ Array.prototype.aa=function(){
+            console.log("你很帅");
+        }
+> 内置类的原型的空间地址不允许修改
+
+**可枚举属性和不可枚举属性**
+> 可枚举属性：1.对象的私有属性 2.给类上面新增扩展的属性
+> 不可枚举属性：对象或原型中天生自带的属性属于不可枚举属性
+
+**Function和Object**
+1. 所有的函数数据类型(普通的函数、内置类、自定义类)都是Function的一个实例
+2. Function和Object都是Function的一个实例；Object的__proto__指向Function的原型
+3. 所有的函数都有prototype和__proto__属性；
+4. 所有类的原型中的__proto__都指向Object的原型；
+5. window 是全局作用域中一个大的对象；window是Object的一个实例；
+
 **constructor**
-1、不能把类的原型重定向
-2、不能在私有属性上加constructor
+1. 不能把类的原型重定向
+2. 不能在私有属性上加constructor
 
 **给实例的类封装公共方法需要注意的几点**
-1、你自己封装的方法不能与人家内置的方法同名
-2、给你自己的方法加前缀
+1. 你自己封装的方法不能与人家内置的方法同名
+2. 给你自己的方法加前缀
 
 **自定义类的this**
-1、实例的私有属性或者公有属性里的this一般指向当前实例
-2、构造函数里的this是当前实例
+1. 实例的私有属性或者公有属性里的this一般指向当前实例
+2. 构造函数里的this是当前实例
 
 console.log(ary.myUnique().sort().reverse().slice(1,3))
 **如果你想用链式调用，前提是你的方法的返回值必须是当前类的实例**
@@ -2050,41 +2113,11 @@ Array.prototype.mySlice = function(n,m){
 ```
 
 **优先级**
-1、成员访问：寻找对象里的属性名所对应的属性值就是成员访问(19)
+1. 成员访问：寻找对象里的属性名所对应的属性值就是成员访问(19)
     Fn.aa
-2、new(带参数列表):就是构造函数执行有括号(19)
-3、new(无参数列表):就是构造函数执行没有括号(18)
+2. new(带参数列表):就是构造函数执行有括号(19)
+3. new(无参数列表):就是构造函数执行没有括号(18)
 优先级一样，从左到右运算
-
-## 原型继承
-让类B的原型指向类A的实例，那么以后类B的实例既可以调取类A实例的私有属性，也可以调取类A实例的的公有属性，那这种继承方式就是原型继承
-> 这种方式不可以使用到内置类，因为内置类原型不能修改
-```
-function A(){
-    this.getX = function(){
-        console.log('恭喜发财')
-    }
-};
-A.protopyte.getY = function(){
-    console.log('妮儿，你长得可俊哩')
-};
-function B(){}
-B.prototype = new A;
-let f = new B;
-f.getX();
-f.getY();
-```
-
-## 中间类继承
-arguments虽然不是Array的实例，但是我们可以手动把arguments的__proto__指向Array的原型，那这样arguments就可以使用Array原型上的方法了，这就是中间类继承
-> 中间类继承只能继承公有属性
-```
-function fn(){
-    arguments.__proto__=Array.prototypr;
-}
-console.log(arguments.push(23))
-console.log(arguments)
-```
 
 ## call apply bind 改变this指向
 > 每一个函数都是Function的实例，所以每一个函数都可以调取Function原型上的方法
@@ -2092,6 +2125,8 @@ console.log(arguments)
 >  "use strict"  // 使用严格模式
 
 + call方法
+  > fn通过__proto__先找到Function原型中的call方法，让call方法执行，call执行时，改变了call的this的this指向，fn中的this指向了call的第一个参数，并且让call中的this执行
+
   1. fn通过__proto__属性找到当前所属类的原型(Function的原型)上的call方法
   2. 让call方法执行，并且给call传实参
   3. 在call方法执行的同时，也让fn执行，并且把fn的this指向了第一个参数
@@ -2102,9 +2137,8 @@ console.log(arguments)
   8. Function.prototype.call.call(fn1); // 1
   // 如果出现两个及以上call，那最后运行的就是传进去的函数
 
-
 + apply
-    > 他和call方法一样，只不过第二个参数必须是数组或者类数组
+    > 他和call方法一样，只不过第二个参数必须是数组或者类数组(传入数组，但是fn实际接收到的仍然是一个一个接收)
     ```
     function fn(n,m){
             console.log(this, n, m)
@@ -2112,8 +2146,9 @@ console.log(arguments)
     fn.apply(1, [20,30])
     ```
 
-+ bind
-   > 这个方法也是改变this指向的，但他会提前改变实例函数的this指向，并不会让实例函数执行，他的返回值是改变this之后的新函数
++ bind (预处理this)
+   > 这个方法也是改变this指向的，在bind函数中将fn进行了包装和处理，提前改变实例函数的this指向，并不会让实例函数执行，他的返回值是改变this之后的新函数
+   > bind在IE8以下不兼容
    ```
     let box = document.getElementById('box');
     let fn = function(){
@@ -2150,6 +2185,36 @@ for (var i = 1; i < ary.length; i++) {
 console.log(max)
 ```
 
+## 原型继承
+让类B的原型指向类A的实例，那么以后类B的实例既可以调取类A实例的私有属性，也可以调取类A实例的的公有属性，那这种继承方式就是原型继承
+> 这种方式不可以使用到内置类，因为内置类原型不能修改
+```
+function A(){
+    this.getX = function(){
+        console.log('恭喜发财')
+    }
+};
+A.protopyte.getY = function(){
+    console.log('妮儿，你长得可俊哩')
+};
+function B(){}
+B.prototype = new A;
+let f = new B;
+f.getX();
+f.getY();
+```
+
+## 中间类继承 (IE10以下不兼容)
+arguments虽然不是Array的实例，但是我们可以手动把arguments的__proto__指向Array的原型，那这样arguments就可以使用Array原型上的方法了，这就是中间类继承
+> 中间类继承只能继承公有属性
+```
+function fn(){
+    arguments.__proto__=Array.prototypr;
+}
+console.log(arguments.push(23))
+console.log(arguments)
+```
+
 ## call继承
 > call继承只能继承类中的私有属性
 ```
@@ -2175,49 +2240,27 @@ function B(){
 ```
 
 ## 寄生组合继承
+> 使用call继承了私有属性，object.create继承了公有属性，这种继承方式就是寄生组合继承
 > object.create(context)://创建一个空对象，让对象的__proto__指向你传的第一个参数
 ```
-Object.create(context): // 创建一个空对象，让对象的__proto__指向你传的第一个参数
-    let obj = {
-        ame: 3,
-        getX: function () {
-                console.log(11)
-        }
-    }
-    let o = Object.create(obj)
-    console.log(o);
-    console.log(o.__proto__ === obj) // true
-    创建一个空对象，让空对象的__proto__指向你传递的第一个参数(obj)
+ var obj = {age:1,hh:"欢迎你"}
+// Object.create   Object.keys
+var o = Object.create(obj);// 返回一个新的对象 o 的__pro
+console.log(o);// {__proto__:{age:1,hh:"欢迎你",__proto__:Object.prototype}}
 
-
-    function A(){
-            this.a = 10
-        }
-        A.prototype.getX = function(){
-            console.log('恭喜发财')
-        }
-
-        function B(){
-            /* 
-            函数B以构造函数的身份运行
-            那类B中的this指向当前实例
-            */
-            this.x =20;
-            A.call(this); // 让函数A以普通函数身份运行，而且把函数A中的this指向了类B的实例
-        }
-        B.prototype = Object.create(A.prototype);
-        // 创建一个空对象，让空对象的__proto__指向类A的原型，在把这个空对象赋值给类B的原型
-        let f = new B;
-        f.__proto__.getY = function(){
-            console.log(333)
-        };
-        let m = new A;
-        // m.getY()
-        console.log(f)
-        //call继承让类B继承了类A的私有属性，然是不能继承类A的公有属性
-        // console.log(f)
-        // f.getY() // 报错
-        // f.a // 可以取到
+function A(){
+}
+A.prototype.getX = function(){
+    console.log(100);
+}
+function B(){
+    A.call(this)// 继承私有属性
+}
+B.prototype = Object.create(A.prototype);// 继承公有属性；
+// 为了防止修改B的原型时，修改了A的原型，所以使用Object.create的方法；
+B.prototype.getY = function(){
+}
+var b = new B;
 ```
 
 **案例：3、call的阿里面试题、4、类数组转数组、5、求一组数的平均数、9、sort的案例**
