@@ -1,5 +1,7 @@
 + "use strict"; 严格模式
 
++ try catch 如果try中的代码报错了，那么就会立即执行catch中的代码；不会影响下面的代码执行  如果不报错，那么就不走catch
+
 + alert 的结果都要加''，弹出的值都是字符串
   
 + alert alert会在浏览器描绘dom之前执行
@@ -125,3 +127,5 @@ console.log(a); //1
 +  <textarea type='text' id="num1">输入数字</textarea>  实时获取文字方法  名字.value
 
 + 在全局作用域中存在n，windom中也存在n，会先找全局，再找windom
+
++ eval可以将字符串去掉，让里面的表达式运行

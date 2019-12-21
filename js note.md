@@ -1770,6 +1770,7 @@ fn()()
 7. 实例的公有方法和私有方法的this一般情况是当前实例
 8. 箭头函数没有this
 9. call,apply,bind 可以改变this指向；
+10. 自执行函数的实参中的this，指向了自执行函数外层的作用域
 
 ```
 function A(){
@@ -1948,6 +1949,7 @@ function createPerson(name, age){
     由0到多组键值对组成、属性名的类型是数字或字符串
 
 函数的主角色还是函数
+函数既有protopyte又有__proto__，函数的堆内存既储存了函数的私有属性，又储存了函数体中的代码字符串，是在同一个空间地址下的
 
 ## instanceof
 > instanceof:他是检测当前实例是否是属于某个类的实例，如果实例是属于这个类，那就返回true，反之就是false
@@ -2077,14 +2079,20 @@ Fn.prototype={
 > 内置类的原型的空间地址不允许修改
 
 **可枚举属性和不可枚举属性**
-> 可枚举属性：1.对象的私有属性 2.给类上面新增扩展的属性
+> 可枚举属性：1.对象的私有属性 2.新增的公有属性
 > 不可枚举属性：对象或原型中天生自带的属性属于不可枚举属性
+```
+// for in 可以列举出所有的可枚举属性
+    for(var key in f){
+        console.log(key);  
+    }
+```
 
 **Function和Object**
 1. 所有的函数数据类型(普通的函数、内置类、自定义类)都是Function的一个实例
 2. Function和Object都是Function的一个实例；Object的__proto__指向Function的原型
 3. 所有的函数都有prototype和__proto__属性；
-4. 所有类的原型中的__proto__都指向Object的原型；
+4. 所有类的原型(对象)中的__proto__都指向Object的原型；
 5. window 是全局作用域中一个大的对象；window是Object的一个实例；
 
 **constructor**
@@ -2172,17 +2180,21 @@ let ary = [2,3,4,1,2,4,2,1,9]
 console.log(Math.max(...ary))
 //2.sort
 console.log(ary.sort((a,b)=>b-a)[0])
-//3.apply
-console.log(Math.max.apply('',ary))
+//3.apply (1.改变this指向 2.解决传参的方式)
+console.log(Math.max.apply(null,ary))
 //4.比较
-let max = ary[0];
-for (var i = 1; i < ary.length; i++) {
-    var item = ary[i];
-    if(item>max){
-        max = item
+for(var i=0;i<ary.length-1;i++){
+   if(ary[i]>ary[i+1]){// 找到前面一项比后一项大的情况；把最大值放到数组的最后面；
+    // var  temp = ary[i];
+    // ary[i]=ary[i+1];
+    // ary[i+1]=temp;
+    // 交换位置
+    var a = ary[i]+ary[i+1];
+    var b = ary[i]-ary[i+1];
+    ary[i]=(a-b)/2;
+    ary[i+1]=(a+b)/2;
     }
 }
-console.log(max)
 ```
 
 ## 原型继承
@@ -2386,24 +2398,35 @@ let str = `<li><span>${ss}</span><span>${ss}</span></li>` //新
 
 ## JSON
 + JSON数据格式：他不是数据类型，它是一种数据格式
-+ 一般情况下我们从后台请求来的数据都是json格式的
++ 页面都是动态渲染的；是前端通过请求后台的数据库，后面把最新的数据返回，前面接受到后端返给的数据，然后进行字符串拼接，渲染到页面上；
++ 后端返回给前端数据格式一般都是JSON格式；
 + JSON数据格式
     - ：json格式的对象
     - ：json格式的字符串
 + JSON.parse:把json格式的字符串转换为json格式的对象
 + JSON.stringify:把json格式的对象转换为json格式的字符串
 ```
-    let obj = {"name":3}  json格式的对象
-    let obj = '{"name":3}' // json格式的字符串
-    obj = JSON.parse(obj);
-    console.log(obj.name) // 3
+这个是JSON格式的对象
+    var  obj ={"name":"hello","str":"world"};
+这个是JSON格式的字符串；
+    var str = '{"name":"hello","str":"world"}';
+JSON.stringify : 将JSON格式的对象转成JSON格式的字符串
+    console.log(JSON.stringify(obj));
+JSON.parse: 将JSON格式的字符串转成JSON格式的对象
+    console.log(JSON.parse(str))
 ```
-
+**深克隆 ：两个对象是独立的，互不影响;**
+```
+    var newObj = JSON.parse(JSON.stringify(obj));
+    obj.a.c=2;
+    console.log(newObj);
+```
 **案例新商城排序(重) 见老师课件正式课第二周第四天**
 
 ## dom的回流和重绘
-1. dom的回流:当页面的dom产生变化(增加，删除，改变位置，改变大小)都会引发dom的回流，所谓回流，就是把dom重新排列进行渲染，他会非常消耗性能的
-2. 重绘：当某一个dom元素的样式发生改变(比如改变dom的颜色)，不会引起dom的回流，但是会重新绘制
+1. DOM 映射： 页面中的元素和JS中元素对象有一一映射的关系，当操作或移动JS的元素对象时，页面的标签元素也会跟着发生改变；这就是DOM映射的机制；
+2. dom的回流:当页面的dom产生变化(增加，删除，改变位置，改变大小)都会引发dom的回流，所谓回流，就是把dom重新排列进行渲染，他会非常消耗性能的
+3. 重绘：当某一个dom元素的样式发生改变(比如元素的样式，背景 字体颜色 透明度等)，不会引起dom的回流，但是会重新绘制
 ```
 let box = document.getElementById('box');
         console.time()
@@ -2427,6 +2450,59 @@ let box = document.getElementById('box');
         box.appendChild(frg);
         console.timeEnd()
 ```
+
+## 数据绑定：将后台返回给前端的数据进行展示
+> 元素的原型链：a -> HTMLDivElement -> HTMLElement -> Element -> Node -> EventTarget -> Object
+
+```
+ <ul id="list"></ul>
+
+var  ary = ["正在直播：习近平出席庆祝澳门回归祖国20周年大会","庆祝澳门回归祖国20周年文艺晚会在澳门举行 习近平出席观看","一国两制为啥在澳门成功了？何厚铧道出了这一根本支柱"];
+
+1. document.createElement
+let list = document.getElementById('list');
+for(let i = 0;i < ary.length;i++){
+    //每循环一次，都会引发一次回流
+    let curLi = document.createElement('li');
+    curLi.innerHTML = ary[i];
+    list.appendChild(curLi);
+}
+
+2. document.createDocumentFragment 文档碎片
+//相当于js储存dom的一个容器，引发一次回流
+
+let list = document.getElementById('list');
+let frg = document.createDocumentFragment();
+for(let i = 0;i<ary.length;i++){
+    let curLi = document.createElement('li');
+    curLi.innerHTML = ary[i];
+    frg.appendChild(curLi);
+}
+list.appendChild(frg);
+frg=null;
+
+3. 字符串拼接 
+//innerHTML：能识别标签
+
+let list = document.getElementById('list');
+var str = '';
+for(let i=0;i<ary.length;i++){
+    str += '<li>'+ary[i]+'<button a='123'>删除</button><li>'
+}
+list.innerHTML = str;
+
+4. 模板字符串
+let list = document.getElementById('list');
+let str = ``;
+for(let i=0;i<ary.length;i++){
+    str += `<li time='abc'>${ary[i]}<button>删除</button></li>`
+}
+    list.innerHTML = str;
+    
+// 字符串也会引发DOM的回流；只不过只引发一次；
+// 在框架项目之前，数据都采用模板字符串的方式进行绑定
+```
+
 
 # 正则
 > 正则是js的内置类RegExp
