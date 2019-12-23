@@ -2280,11 +2280,21 @@ var b = new B;
 ## ES6
 1. let和const
  + let和const没有变量提升，var有变量提升
- + let和const不能重复声明，var可以
+ + let和const不能重复声明，var可以(代码执行之前会进行过滤，如果有重复声明，就报错)
  + let可以解决暂时性死区
  + let可以形成块级作用域(大括号结合)
+ + let声明的变量只在当前作用域有效
  + var在全局作用域下声明变量会给window增加键值对，let不会
  + const定义的常理必须赋值
+```
+function fn(){
+    //即使函数没有执行，在代码执行之前会进行过滤，如果有重复声明，就报错
+    let a = 100;
+    let a = 1;
+}
+
+
+```
 
 2. 箭头函数
  + 箭头函数没有this
@@ -2296,7 +2306,7 @@ var b = new B;
  + 给函数的形参赋默认值(普通函数和箭头函数都可以)
 ```
 let fn = () => {
-            console.log(this)
+    console.log(this)
 }
 fn()
 
@@ -2390,8 +2400,8 @@ class Fn {
 ```
 5. 模板字符串(``)
 ```
- let ss = 25;
- let str = '<li>'+ss+'</li>';
+let ss = 25;
+let str = '<li>'+ss+'</li>';
     '<li><span>'+ss+'</span><span>'+ss+'</span></li>' //旧
 let str = `<li><span>${ss}</span><span>${ss}</span></li>` //新
 ```
