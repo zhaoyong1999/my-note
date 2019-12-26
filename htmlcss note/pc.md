@@ -59,6 +59,12 @@
       text-decoration:none;
   }
   ```
+  + 加上a标签的下划线
+    ```
+    a{
+      text-decoration:underline;
+    }
+    ```
 + 清除列表前面的默认样式
 ```
 ul,ol{
@@ -457,6 +463,8 @@ clear:both;
   letter-spacing:1px;
 + /* 溢出隐藏 */
   overflow: hidden;
++ /* 溢出变... */
+  text-overflow:ellipsis;
 + /* 首行缩进 */
   text-indent: 2em;
   + /* 背景图 */

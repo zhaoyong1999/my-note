@@ -1954,7 +1954,8 @@ function createPerson(name, age){
 ## instanceof
 > instanceof:他是检测当前实例是否是属于某个类的实例，如果实例是属于这个类，那就返回true，反之就是false
 > instanceof只要检测的类在实例的原型链上，那么就返回true
-> 【局限性】：instanceof不能够检测基本数据类型，只能检测引用数据类型的值
+> 只要改变了当前实例的原型链，那结果就不准确了
+> 【局限性】：instanceof不能够检测字面量方式创建的基本数据类型，只能检测引用数据类型的值
 
 **创建变量**
 > 字面量方式创建变量
@@ -2299,6 +2300,8 @@ function fn(){
 2. 箭头函数
  + 箭头函数没有this
  + 没有arguments
+ + 箭头函数不能被new
+ + 箭头函数不能作为generator
  + 如果在箭头函数里使用this，那他就会往上一级作用域查找this
  + 如果只有一个形参，可以去掉小括号
  + 如果只有return一行代码，可以省略return和大括号
@@ -2516,7 +2519,7 @@ for(let i=0;i<ary.length;i++){
 
 # 正则
 > 正则是js的内置类RegExp
-> 正则就是处理字符串的，它的特长在于处理复杂的字符串
+> 正则就是处理字符串的规则，它的特长在于处理复杂的字符串
 > 1、正则定义了一个字符串的模型。
 > 2、正则的第一个作用是“验证某字符串是否和这个模型相匹配”（test：匹配一个字符串是否满足这个规则，如果满足于返回true，反之返回false）
 > 3、正则的第二个作用是“把匹配到的内容找出来”。（exec：捕获）
@@ -2541,9 +2544,9 @@ console.log(reg)
 
 ## 正则由两部分组成：元字符和修饰符
 + 修饰符：就是把正则额外的修饰一下
-    - i: 忽略单词大小写匹配
+    - i(ignoreCase): 忽略单词大小写匹配
     - m：多行匹配
-    - g：全局匹配
+    - g(global)：全局匹配
 + 元字符：量词元字符、普通元字符、特殊元字符
     - 量词元字符：代表出现的次数
         + *:代表0到多次
@@ -2559,11 +2562,13 @@ console.log(reg)
         + $:以什么什么结尾
         + \n:换行符
         + \d:0-9之间的一个数字
-        + \D:非0-9之间的一个数字
+        + \D:非0-9数字的任意字符
         + \w:数字、字母、下划线
+        + \W:非数字、字母、下划线
         + \s:空白字符(包含换页符，空格，制表符等)
         + \t:制表符(一个TAB键：四个空格)
         + \b:单词边界
+        + \B:非单词边界
         + x|y:取x、y中的任意一个
         + [xyz] 取x、y、z中的任意一个 
         + [a-z] 在a到z范围内取一个
@@ -2592,7 +2597,7 @@ console.log(reg)
         console.log(reg.test('29')) // true
         console.log(reg.test('189')) // false
         console.log(reg.test('129')) // false
-        onsole.log(reg.test('28')) // false
+        console.log(reg.test('28')) // false
         //加()只能是18或29
     ```
 
@@ -2738,8 +2743,7 @@ let reg = /^[a-z]([a-z])\1$/
  3. 如果你只匹配不捕获，就在小括号里加?:
  4. exec只能捕获到第一次出现的符合正则规则的内容(这是正则捕获的懒惰型，默认只捕获第一个)
 
-
-> match:他是字符串的一个方法，在String类的原型上，这个方法传递一个正则，返回是是一个数组
+> match:他是字符串的一个方法，在String类的原型上，这个方法传递一个正则，返回的是一个数组
  + 如果正则不加g，跟exec返回值一样
  + 如果加上g会把每一次捕获到的内容放到一个数组里返回
  + 缺点：多次匹配的情况下(加上g)，如果要进行分组捕获，那他就拿不到分组捕获的内容了
@@ -2819,9 +2823,14 @@ let h = documentElement.clientHeight || document.body.clientHeight
     **案例offset偏移量**
 
  3. scroll系列
-    + scrollHeight:如果当前元素的文本不溢出，那就等于clientHeight，如果当前元素溢出了，那就是当前的高度+上下padding
-    + scrollWidth:如果当前元素的文本不溢出，那就等于clientWidth，如果当前元素溢出了，那就是当前的宽度+左右padding
+    + scrollHeight:如果当前元素的文本不溢出，那就等于clientHeight，如果当前元素溢出了，那就是当前的高度+上padding
+    + scrollWidth:如果当前元素的文本不溢出，那就等于clientWidth，如果当前元素溢出了，那就是当前的宽度+左padding
 **这11个属性是可读属性，只能读不能写**
+
+   + scrollLeft:当前元素横向滚动条卷去的长度
+   + scrollTop:当前元素纵向滚动条卷去的高度
+   + 它俩既可读，又可写
+
 
 ## getCss
 > 获取元素的css样式
@@ -2833,8 +2842,5 @@ let h = documentElement.clientHeight || document.body.clientHeight
  3. currentStyle
     + 这个属性只在IE下存在
     + 元素.currentStyle.属性名
+    + 他既能获取样式表里的样式，也能获取行内的样式
 
-### scrollLeft scrollTop
- + scrollLeft:当前元素横向滚动条卷去的长度
- + scrollTop:当前元素纵向滚动条卷去的高度
- + 它俩既可读，又可写
