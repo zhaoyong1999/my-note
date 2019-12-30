@@ -1,6 +1,6 @@
 + "use strict"; 严格模式
 
-+ alt+f 格式化
++ alt+shift+f 格式化
 
 + try catch 如果try中的代码报错了，那么就会立即执行catch中的代码；不会影响下面的代码执行  如果不报错，那么就不走catch
 
@@ -79,3 +79,15 @@ console.log(a); //1
 +  box.onmouseover = function () {}  移入事件
 
 + box.onpointerout = function () {}  移出事件
+
++ Array.from: 将类数组集合转成真正的数组  //Array.from(arguments)
+
++ Array.of : 将一组数转成数组 //Array.of(1,2,3)
+
++ filter不会执行转布尔为false的那项
+
++ 数组去重： 相邻项去重 set 对象名重复 每一项比较
+
++ Array.protopyte.flat() 数组扁平化
+
++ 数组扁平化 ES6 转换为字符串 循环验证是否是数组

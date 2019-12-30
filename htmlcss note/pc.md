@@ -219,7 +219,10 @@ ul,ol{
 display:block;
 content:"";
 clear:both;
+height:0;
+visibility: hidden;
 }
+当前的.clear{zoom:1} //让它自己有独立的布局，兼容IE6以下
 ```
 ## 补充
 ### 伪元素
@@ -480,8 +483,8 @@ border-radius: 50%;
 + 文本框
 <input type="text">
 + 阴影代码
-(内容)text-shadow： 2px 2px 6px rgba(0, 0, 0, .4);
-<!-- 水平x 垂直y 模糊程度 颜色 -->
+(内容)text-shadow： 2px 2px 6px rgba(0, 0, 0,0, .4);
+<!-- 水平x 垂直y 模糊程度 模糊距离 颜色 -->
  (框)box-shadow: 2px 2px 6px rgba(0, 0, 0, .4);
 + 行内块设margin没用
  + 解决办法 给父级设
