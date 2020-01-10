@@ -61,7 +61,7 @@ console.log(a); //1
 + this不能放在等号左边
 
 + jquery的源码的外层就是采用了这种高级单例的模式；
-
+ 
 + 用取整要加10进制  parseInt(a,radix:10);
 
 +  <textarea type='text' id="num1">输入数字</textarea>  实时获取文字方法  名字.value
@@ -88,6 +88,31 @@ console.log(a); //1
 
 + 数组去重： 相邻项去重 set 对象名重复 每一项比较
 
-+ Array.protopyte.flat() 数组扁平化
++ Array.prototype.flat() 数组扁平化
 
 + 数组扁平化 ES6 转换为字符串 循环验证是否是数组
+
++ 柯理化函数的思想：利用闭包的机制，把一些内容事先储存和处理了，等到后期需要的时候拿出来用即可
+
++ 让盒子在页面中间的三种写法
+```
+第一种
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            margin: -150px 0 0 -150px;
+
+第二种
+            position: absolute;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            margin: auto;
+
+第三种js
+        let l = (document.documentElement.clientWidth - box.offsetWidth)/2;
+        let t = (document.documentElement.clientHeight - box.offsetHeight)/2;
+        box.style.left = l+'px';
+        box.style.top = t+'px';
+```

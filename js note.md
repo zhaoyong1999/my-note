@@ -77,6 +77,7 @@ QQ、360、火狐(FireFOX)、谷歌(Chrome)、IE、朋克(Opera)、safair
         + 只要字符串中出现了非有效数字，那结果就是NaN（第一个小数点不算，第一个-、+不算）
         +  如果左右有空格，会自动去掉(中间的空格不会去)
         +  空字符串转数字是0
+        +  不改变原参数，返回一个新的数字
 
     - 把布尔转数字
         + true转数字是1
@@ -708,6 +709,26 @@ for(var key in obj) // 属性名为obj{
     console.log(obj[key]) // 每一项属性名对应的属性值  
 }
 ```
+ 4. for of
+> 循环数组或者类数组的每一项值
+```
+let ary = [1, 2, 3, 4, 1, 1];
+let ary1 = new Set([100, 200, 300, 4, 1, 1]);
+      
+for (let key of ary1) {
+    console.log(key); //数组的成员，可以和set搭配使用
+} 
+for (let key of ary.values()) {
+    console.log(key); //数组的成员
+}
+for (let key of ary.keys()) {
+    console.log(key); //循环数组的索引
+}
+for (let key of ary.entries()) {
+    console.log(key); //循环数组的成员和索引 放在一个空数组里
+}
+```
+
 
 # 2、数据类型检测
 - typeof 检测数据类型的属性
@@ -1198,6 +1219,22 @@ ary.map((item,index) => {
   +  some() 不会对空数组进行检测。
   +  some() 不会改变原始数组。
 
++ 4. filter: 过滤，如果回调函数返回true，就把这一项放到新数组中返回，不改变原数组
+
++ 5. find:从左到右循环，找到满足条件的第一项，停止循环，并把这一项返回出去；如果没有找到返回undefined
+
++ 6. every：从左到右循环，找到不符合条件的第一项，停止循环，返回false；如果都满足条件，就返回true
+
++ 7. reduce: 收敛，一般用于求和
+
+```
+let arr = [{price:5,count:3,name:"苹果"},{price:3,count:2,name:"橘子"},{price:2,count:5,name:"香蕉"}]
+
+        let title = arr.reduce(function (prev,next) {
+            return prev+ next.price * next.count
+        },0)
+```
+
 # 数组去重
 + 1.利用includes检测数组是否存在同样的数
 ```
@@ -1401,7 +1438,7 @@ ary.map((item,index) => {
 4、document.body/document.head/document.documentElement(获取body、头部、html)
 4、 console.log(document.body) // 获取body
     console.log(document.head) // 获取头部
-    console.log(document.documentElement) // 获取html
+    console.log(document.documentElement) // 获取html 
 
 5、context.querySelector()  在指定上下文中通过选择器获取第一个元素，获取不到就是null【在IE6~8下不兼容】
    let ss =  box.querySelector('#navList .a');
@@ -1449,6 +1486,7 @@ createTextNode:创建文本节点
 容器.appendChild(节点)：把节点插入到容器的末尾
 容器.insertBefore(新节点, 老节点)：把节点插入到老节点的前面
 容器.removeChild(节点)：移除容器中的节点
+replaceChild 替换
 ```
 let box = document.createElement('div'); // 动态创建一个元素节点
         let one = document.getElementById('one');
@@ -1480,9 +1518,11 @@ let one = document.getElementsByClassName('box');
 ```
 
 ## 增加行内属性
-setAttribute('属性名',属性值)； 在元素结构中设置属性
-getAttribute('属性名') 在元素结构中获取属性
+setAttribute('属性名',属性值)； 在元素结构中设置自定义属性 
+getAttribute('属性名') 在元素结构中获取自定义属性
 removeAttribute('属性名'); 在元素结构中移除属性
+classList.add('属性名'); 增加属性名
+classList.remove('属性名'); 删除属性名
 ```
 <button>1</button>
 <button>2</button>
